@@ -50,6 +50,10 @@ spec:
           # The VM must be provisioned with multiple vCPUs to benefit from multiple I/O queues.
           blockMultiQueue: true
 {% endif %}
+          # Allow attaching devices from the client's machine to the VMI using
+          # the virtctl usbredir command. Up to 4 USB devices can be forwarded.
+          # See https://kubevirt.io/user-guide/compute/client_passthrough/
+          #clientPassthrough: {}
           disks:
           - disk:
               bus: virtio
