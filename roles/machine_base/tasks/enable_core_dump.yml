@@ -10,7 +10,7 @@
       - abrt-libs
       - abrt-tui
     state: absent
-  when: ansible_facts.os_family == "RedHat"
+  when: ansible_facts.os_family == 'RedHat'
   become: true
 
 - name: Set the core file pattern
@@ -24,8 +24,8 @@
 - name: Enable core file generation
   ansible.builtin.lineinfile:
     dest: /etc/security/limits.conf
-    regexp: " soft core unlimited"
-    line: "* soft core unlimited"
+    regexp: ' soft core unlimited'
+    line: '* soft core unlimited'
     insertafter: EOF
     state: present
   ignore_errors: true
