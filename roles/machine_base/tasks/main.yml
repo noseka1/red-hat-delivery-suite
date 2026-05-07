@@ -27,6 +27,10 @@
   when: machinebase_timezone | length > 0
   become: true
 
+- ansible.builtin.import_tasks: ca_certificate.yml
+  when:
+    - machinebase_import_ca_certificate | length > 0
+
 - ansible.builtin.import_tasks: configure_ntp.yml
 
 - ansible.builtin.import_tasks: configure_fstrim.yml

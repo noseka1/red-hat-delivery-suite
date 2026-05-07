@@ -3,6 +3,9 @@ machinebase_timezone: America/Los_Angeles
 machinebase_update_all_packages: true
 machinebase_update_all_packages_reboot: true
 
+# Add CA certificate to operating system's trust store
+machinebase_import_ca_certificate: ''
+
 machinebase_http_proxy: {}
 
 # Use custom trusted CA certificate instead of the default redhat-uep.pem
