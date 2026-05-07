@@ -1,14 +1,9 @@
 - name: Set hostname if it was not set properly
-  ansible.builtin.command: hostnamectl set-hostname {{ ansible_host }}
-  when: ansible_nodename != ansible_host
-  become: true
-
-- name: Set transient hostname if it was not set properly
-  ansible.builtin.command: hostnamectl set-hostname --transient {{ ansible_host }}
-  when: ansible_nodename != ansible_host
-  register: hostname
+  ansible.builtin.hostname:
+    name: '{{ inventory_hostname_short }}'
+  register: machinebase_hostname_result
   become: true
 
 - name: Run setup after the hostname changed
   ansible.builtin.setup:
-  when: hostname is changed
+  when: machinebase_hostname_result is changed
