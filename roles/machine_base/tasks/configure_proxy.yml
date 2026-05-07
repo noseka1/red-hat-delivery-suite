@@ -3,7 +3,7 @@
     dest: /etc/dnf/dnf.conf
     section: main
     option: proxy
-    value: '{{ machine_base_http_proxy[ansible_facts.domain].https_proxy }}'
+    value: '{{ machinebase_http_proxy[ansible_facts.domain].https_proxy }}'
     no_extra_spaces: true
     backup: true
   become: true
@@ -11,10 +11,10 @@
 - name: Install custom yum trusted CA certificate
   ansible.builtin.copy:
     dest: /etc/rhsm/ca/redhat-uep-custom.pem
-    content: '{{ machine_base_custom_yum_sslcacert[ansible_facts.domain] }}'
+    content: '{{ machinebase_custom_yum_sslcacert[ansible_facts.domain] }}'
     backup: true
   when:
-    - machine_base_custom_yum_sslcacert[ansible_facts.domain] is defined
+    - machinebase_custom_yum_sslcacert[ansible_facts.domain] is defined
   become: true
 
 - name: Configure Red Hat Subscription Manager to generate redhat.repo that uses custom cert
@@ -24,7 +24,7 @@
     option: repo_ca_cert
     value: '%(ca_cert_dir)sredhat-uep-custom.pem'
   when:
-    - machine_base_custom_yum_sslcacert[ansible_facts.domain] is defined
+    - machinebase_custom_yum_sslcacert[ansible_facts.domain] is defined
   become: true
 
 - name: Disable server certificate status verification (OCSP Stapling) for yum repos
@@ -33,5 +33,5 @@
     regexp: 'sslverifystatus = 1'
     replace: 'sslverifystatus = 0'
   when:
-    - machine_base_custom_yum_sslcacert[ansible_facts.domain] is defined
+    - machinebase_custom_yum_sslcacert[ansible_facts.domain] is defined
   become: true

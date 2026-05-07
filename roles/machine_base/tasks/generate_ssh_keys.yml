@@ -9,13 +9,13 @@
 
 - name: Generate SSH keys for root
   community.crypto.openssh_keypair: path=/root/.ssh/id_rsa
-  register: machine_base_root_keypair_result
+  register: machinebase_root_keypair_result
   become: true
 
 - name: Set as authorized key
   ansible.posix.authorized_key:
     user: root
-    key: '{{ machine_base_root_keypair_result.public_key }}'
+    key: '{{ machinebase_root_keypair_result.public_key }}'
     state: present
   become: true
 
@@ -31,10 +31,10 @@
 - name: Generate SSH keys for {{ ansible_facts.user_id }}
   community.crypto.openssh_keypair:
     path: '{{ ansible_facts.user_dir }}/.ssh/id_rsa'
-  register: machine_base_user_keypair_result
+  register: machinebase_user_keypair_result
 
 - name: Set as authorized key
   ansible.posix.authorized_key:
     user: '{{ ansible_facts.user_id }}'
-    key: '{{ machine_base_user_keypair_result.public_key }}'
+    key: '{{ machinebase_user_keypair_result.public_key }}'
     state: present

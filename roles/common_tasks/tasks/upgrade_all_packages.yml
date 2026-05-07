@@ -3,7 +3,7 @@
     name: '*'
     state: latest
   when:
-    - machine_base_update_all_packages
+    - machinebase_update_all_packages
     - ansible_facts.distribution in [ "RedHat", "Fedora" ]
   register: package_upgrade_result
   become: true
@@ -12,5 +12,5 @@
   ansible.builtin.reboot:
   when:
     - package_upgrade_result is changed
-    - machine_base_update_all_packages_reboot
+    - machinebase_update_all_packages_reboot
   become: true

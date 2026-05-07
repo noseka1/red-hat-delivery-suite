@@ -13,7 +13,7 @@
 - ansible.builtin.import_tasks: configure_proxy.yml
   when:
     - ansible_facts.distribution == 'RedHat'
-    - machine_base_http_proxy[ansible_facts.domain] is defined
+    - machinebase_http_proxy[ansible_facts.domain] is defined
 
 - ansible.builtin.import_tasks: disable_password_expiration.yml
 
@@ -21,10 +21,10 @@
 
 - ansible.builtin.import_tasks: generate_ssh_keys.yml
 
-- name: Set timezone to {{ machine_base_timezone }}
+- name: Set timezone to {{ machinebase_timezone }}
   community.general.timezone:
-    name: '{{ machine_base_timezone }}'
-  when: machine_base_timezone | length > 0
+    name: '{{ machinebase_timezone }}'
+  when: machinebase_timezone | length > 0
   become: true
 
 - ansible.builtin.import_tasks: configure_ntp.yml

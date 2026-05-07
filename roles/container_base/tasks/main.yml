@@ -23,5 +23,5 @@
     name: common_tasks
     tasks_from: upgrade_all_packages.yml
   vars:
-    machine_base_update_all_packages: '{{ container_base_update_all_packages }}'
-    machine_base_update_all_packages_reboot: '{{ container_base_update_all_packages_reboot }}'
+    machinebase_update_all_packages: '{{ container_base_update_all_packages }}'
+    machinebase_update_all_packages_reboot: '{{ container_base_update_all_packages_reboot }}'
