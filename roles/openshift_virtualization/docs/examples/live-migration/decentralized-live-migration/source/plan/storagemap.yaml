@@ -1,0 +1,26 @@
+apiVersion: forklift.konveyor.io/v1beta1
+kind: StorageMap
+metadata:
+  name: migration1
+  namespace: openshift-mtv
+spec:
+  map:
+  - destination:
+      storageClass: nfs-csi
+      # Explicitly specify access mode to prevent the error:
+      # PersistentVolumeClaim "example-rootdisk" is invalid: spec.accessModes:
+      # Required value: at least 1 access mode is required
+      accessMode: ReadWriteMany
+    source:
+      name: nfs-csi
+  provider:
+    destination:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Provider
+      name: mycluster5
+      namespace: openshift-mtv
+    source:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Provider
+      name: host
+      namespace: openshift-mtv

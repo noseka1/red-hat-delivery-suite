@@ -1,0 +1,42 @@
+apiVersion: forklift.konveyor.io/v1beta1
+kind: Plan
+metadata:
+  name: migration1
+  namespace: openshift-mtv
+spec:
+  map:
+    network:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: NetworkMap
+      name: migration1
+      namespace: openshift-mtv
+    storage:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: StorageMap
+      name: migration1
+      namespace: openshift-mtv
+  migrateSharedDisks: true
+  preserveStaticIPs: true
+  provider:
+    destination:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Provider
+      name: mycluster5
+      namespace: openshift-mtv
+    source:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Provider
+      name: host
+      namespace: openshift-mtv
+  pvcNameTemplateUseGenerateName: true
+  runPreflightInspection: true
+  skipGuestConversion: false
+  targetNamespace: kubevirt-migrate-target
+  targetPowerState: auto
+  type: live
+  useCompatibilityMode: true
+  vms:
+  - name: example
+    namespace: kubevirt-migrate-source
+  warm: false
+  xfsCompatibility: false

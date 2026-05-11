@@ -1,0 +1,11 @@
+apiVersion: forklift.konveyor.io/v1beta1
+kind: Provider
+metadata:
+  name: mycluster5
+  namespace: openshift-mtv
+spec:
+  secret:
+    name: mycluster5
+    namespace: openshift-mtv
+  type: openshift
+  url: https://api.mycluster5.example.com:6443

@@ -101,83 +101,70 @@ Decentralized live migration is a storage live migration that allows you to migr
 
 Decentralized live migration is available in OpenShift *4.20 or later*.
 
-To enable the decentralized live migration, you must set a feature gate in OpenShift Virtualization. If you are live-migrating between clusters, both clusters must have this feature gate enabled:
+To enable the decentralized live migration, you must set a feature gate in OpenShift Virtualization. If you are live-migrating between clusters, both clusters (source and target) must have this feature gate enabled:
 
 ```
 $ oc patch hyperconverged -n openshift-cnv kubevirt-hyperconverged --type json -p '[{"op":"replace", "path": "/spec/featureGates/decentralizedLiveMigration", "value": true}]'
 ```
 
-Before initiating the live migration, configure the `virtualmachineinstancemigration.spec.sendTo.connectURL` to point to the target synchronization controller. You can follow the instructions in the `example-source-vmim.yaml` file:
+The cross cluster live-migration is orchestrated using MTV. You can find the respective documenation at:
+* [Live migration in MTV](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.11/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#assembly_live-migration_mtv)
+* [OpenShift Virtualization live migration prerequisites](https://docs.redhat.com/en/documentation/migration_toolkit_for_virtualization/2.11/html-single/planning_your_migration_to_red_hat_openshift_virtualization/index#cnv-cnv-live-prerequisites_mtv)
+
+In the source cluster, install MTV version *2.10.0 or later*. As per instructions in [About Migration Toolkit for Virtualization (MTV) providers](https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/virtualization/live-migration#virt-about-mtv-providers), configure OpenShift Virtualization provider for the target cluster. Note that the openshift_virtualization Ansible role creates the service account required for live-migrations on the target cluster. You can obtain the respective service account token by running this command against the target cluster:
 
 ```
-$ vi decentralized-live-migration/example-source-vmim.yaml
+$ oc extract -n kube-system secret/mtv-live-migration --keys token --to -
 ```
 
-Create target namespace:
+Using the token obtained from the output of the above command you can go to OpenShift Web Console of the source cluser and create the OpenShift Virtualization provider. In the OpenShift Web Console, navigate to Migration for Virtualization -> Providers and click on the "Create provider" button. Alternatively, you can leverage the example manifests located in the [mtv-provider directory](mtv-provider).
+
+Both the source and target clusters must be connected to the migration network. This network facilitates IP connectivity for the virt-handler and virt-synchronization-controller pods between the two clusters. You can find example network attachment definitions for the migration networks in the [migration-network directory](migration-network). Note that clusters can be connected to different migration networks. If so then there must be an IP route between the two networks. Refer to [Configuring a cross-cluster live migration network](https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/virtualization/live-migration#virt-configuring-cross-cluster-live-migration-network) and [Configuring KubeVirt CA with cross cluster live migration](https://kubevirt.io/user-guide/compute/decentralized_live_migration/#configuring-kubevirt-ca-with-cross-cluster-live-migration).
+
+After creating the migration network using the net-attach-def resource, you can configure OpenShift Virtualization to use this network for live migrations. Replace the migration network name with your network name before issuing this command:
 
 ```
-$ oc apply -f decentralized-live-migration/namespace.yaml
+$ oc patch hyperconverged -n openshift-cnv kubevirt-hyperconverged --type json -p '[{"op":"replace", "path": "/spec/liveMigrationConfig/network", "value": "default/vm-migration"}]'
 ```
 
-Trigger the decentralized live migration to move a VM to a different namespace
-within the same cluster:
+Create and configure the migration network on the target cluster as well.
+
+In the target cluster, create the namespace for VM to be migrated into:
 
 ```
-$ oc apply -R -f decentralized-live-migration
+$ oc apply -f decentralized-live-migration/target/namespace.yaml
 ```
 
-Example situation after running the command:
+In the source cluster, prepare the migration plan:
 
 ```
-$ oc get vm -A
-NAMESPACE                 NAME      AGE     STATUS    READY
-kubevirt-migrate-source   example   57m     Stopped   False
-kubevirt-migrate-target   example   3m34s   Running   True
+$ oc apply -R -f decentralized-live-migration/source/plan
 ```
 
-```
-$ oc get vmim -A
-NAMESPACE                 NAME             PHASE       VMI
-kubevirt-migrate-target   example-target   Succeeded   example
-```
-
-If the decentralized live-migration doesn't commence, restart all OpenShift
-Virtualization pods and try again:
+Trigger the decentralized live migration to move a VM from the source to the target cluster:
 
 ```
-$ oc delete pod -n openshift-cnv --all
+$ oc apply -f decentralized-live-migration/source/migrate/migration.yaml
 ```
 
-To live-migrate between different OpenShift clusters, several prerequisites
-must be met:
-
-1. The OpenShift Container Platform and OpenShift Virtualization minor release
-   versions [must match](https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/virtualization/live-migration#prerequisites_virt-enabling-cclm-for-vms).
-2. Both clusters must be connected to the same migration network configured in
-   `hyperconverged.spec.liveMigrationConfig.network`. The virt-handler pods in
-   the source cluster must be able to reach the IP of the
-   virt-synchronization-controller in the target cluster via this migration
-   network. Refere to [Configuring a cross-cluster live migration network](https://docs.redhat.com/en/documentation/openshift_container_platform/4.21/html/virtualization/live-migration#virt-configuring-cross-cluster-live-migration-network).
-3. The source cluster must trust the KubeVirt CA of the target cluster. See
-   also [Configuring KubeVirt CA with cross cluster live migration](https://kubevirt.io/user-guide/compute/decentralized_live_migration/#configuring-kubevirt-ca-with-cross-cluster-live-migration).
-
-To establish the trust, import the KubeVirt CA certificate of the target
-cluster to the trust store of the source cluster. Switch Kubernetes context to
-the target cluster. Export the KubeVirt CA certificate from the target cluster
-into a local file named `ca-bundle`:
+After the VM is migrated, it will be stopped on the source cluster:
 
 ```
-$ oc extract -n openshift-cnv cm/kubevirt-ca
+oc get vm -n kubevirt-migrate-source
+NAME      AGE   STATUS    READY
+example   10d   Stopped   False
 ```
 
-Switch Kubernetes context to the source cluster. Import the KubeVirt CA
-certificate to the trust store:
+You will find the VM running on the target cluster:
 
 ```
-$ oc set data -n openshift-cnv cm/kubevirt-external-ca --from-file ca-bundle
+$ oc get vm -n kubevirt-migrate-tar
+get
+NAME      AGE     STATUS    READY
+example   6m15s   Running   True
 ```
 
-### References
+## References
 
 * [Live Migration](https://kubevirt.io/user-guide/compute/live_migration/)
 * [Volume migration](https://kubevirt.io/user-guide/storage/volume_migration/)
