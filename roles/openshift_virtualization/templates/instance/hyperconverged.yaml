@@ -46,6 +46,8 @@ spec:
     # https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/virtualization/live-migration#virt-configuring-live-migration-heavy_virt-configuring-live-migration
     # https://kubevirt.io/user-guide/compute/live_migration/#post-copy
     allowPostCopy: true
+#    # Use dedicated Multus network for VM live-migrations, insert the respective net-attach-def here:
+#    network: default/vm-migration
 #  logVerbosityConfig:
 #    # Set the CDI.spec.config.logVerbosity level
 #    cdi: 4
