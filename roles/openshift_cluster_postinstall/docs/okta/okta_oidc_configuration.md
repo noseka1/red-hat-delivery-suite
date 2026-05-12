@@ -1,6 +1,6 @@
 # Configuring Okta as an Identity Provider for OpenShift
 
-To set up Okta as an identity provider for OpenShift, you may take advantage of the [Okta Integration Free Plan](https://developer.okta.com/).
+To set up Okta as an identity provider for OpenShift, you may take advantage of the [Okta Integration Free Plan](https://developer.okta.com/signup/).
 
 To set up Okta as an OIDC provider for OpenShift, you may follow the article [How to Configure Okta as An Identity Provider for OpenShift](https://www.redhat.com/en/blog/how-to-configure-okta-as-an-identity-provider-for-openshift)
 
