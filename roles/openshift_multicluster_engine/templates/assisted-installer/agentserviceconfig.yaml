@@ -1,6 +1,14 @@
 apiVersion: agent-install.openshift.io/v1beta1
 kind: AgentServiceConfig
 metadata:
+#  annotations:
+#    # Fix Unable to fetch `assisted-installer-agent` image due to a signature
+#    # verification failure: Source image rejected: A signature was required,
+#    # but no signature exists.
+#    # The issue is observed in disconnected environments wherein the images in
+#    # the mirror registry are not signed.
+#    # Link: https://access.redhat.com/solutions/7131683
+#    unsupported.agent-install.openshift.io/assisted-service-allow-unrestricted-image-pulls: 'true'
   name: agent
 spec:
   # For the volume sizing refer to:
