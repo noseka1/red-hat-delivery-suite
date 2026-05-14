@@ -1,3 +1,10 @@
+- import_role:
+    name: openshift_autogitops
+    tasks_from: app_delete.yml
+  vars:
+    autogitops_app_dst_path: aap/cluster-import
+  tags: aap_init
+
 - ansible.builtin.import_role:
     name: openshift_autogitops
     tasks_from: app_delete.yml
