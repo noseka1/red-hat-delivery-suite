@@ -10,7 +10,7 @@ spec:
   # https://kubevirt.io/user-guide/compute/run_strategies/#runstrategy
   runStrategy: Always
   template:
-#    metadata:
+    metadata:
 #      annotations:
 #        # Keep the virt-launcher pod running even if QEMU process exits
 #        kubevirt.io/keep-launcher-alive-after-failure: 'true'
@@ -23,7 +23,28 @@ spec:
 #        # https://libvirt.org/kbase/debuglogs.html#logging-settings-in-libvirt
 #        # https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/10/html/configuring_and_managing_linux_virtual_machines/diagnosing-virtual-machine-problems
 #        kubevirt.io/libvirt-log-filters: '3:remote 4:event 3:util.json 3:util.object 3:util.dbus 3:util.netlink 3:node_device 1:rpc 3:access 1:*'
+      labels:
+        # Refer to recommended application labels at:
+        # https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
+        app.kubernetes.io/name: myservice
+        app.kubernetes.io/instance: myservice-abcxyz
     spec:
+      # Example pod anti-affinity rule. VMs hosting the same application
+      # service will be placed on different cluster nodes.
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - myservice
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - myservice-abcxyz
+            topologyKey: kubernetes.io/hostname
 {% if osvirt_machine_node_selector %}
       nodeSelector: {{ osvirt_machine_node_selector | to_json }}
 {% endif %}
