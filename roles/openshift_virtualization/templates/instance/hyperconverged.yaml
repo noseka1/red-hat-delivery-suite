@@ -63,10 +63,14 @@ spec:
   resourceRequirements:
     # CPU overcommit ratio (default is 10). Set it to 1 for no CPU overcommit.
     vmiCPUAllocationRatio: 4
-  # Apply the scalable tuning parameters recommended for large scale "High Burst" scenarios (i.e. creating many VMs at once or in large batches).
-  # The highBurst profile applies tested and safe QPS and burst values for all Virt components.
-  # If using default settings, it took several hours to schedule and start 700 VMs on a 40-node bare metal cluster. The performance is expected
-  # to improve with the setting of the highBurst policy.
+  # Apply the scalable tuning parameters recommended for large scale scenarios (i.e. creating many VMs at once or in large batches).
+  # The highBurst profile increases the QPS and burst values of the internal rate limiter in several KubeVirt components. The rate limiter
+  # values in the following components are increased:
+  # virt-api, virt-controller, and virt-handler. You can see current the rate limiter values in the respective component logs, for example:
+  # $ oc logs -n openshift-cnv ds/virt-handler | grep 'setting rate limiter'
+  #
+  # If using the default rate limiter settings, it took several hours to schedule and start 700 VMs on a 40-node bare metal cluster. The performance
+  # is expected to improve with the setting of the highBurst policy.
   # See also:
   # OpenShift Virtualization - Tuning & Scaling Guide
   # https://access.redhat.com/articles/6994974
