@@ -25,3 +25,4 @@
   ansible.builtin.assert:
     that: (extsecrets_test_secret.resources.0.data.testkey | b64decode) == 'testvalue'
     fail_msg: The secret value is not 'testvalue'.
+    quiet: true

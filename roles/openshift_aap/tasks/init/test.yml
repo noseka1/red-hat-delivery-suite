@@ -20,3 +20,4 @@
   ansible.builtin.assert:
     that: aap_test_hashivault_read_result.value == 'testvalue'
     fail_msg: The secret value is not 'testvalue'.
+    quiet: true

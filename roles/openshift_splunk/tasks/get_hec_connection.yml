@@ -12,6 +12,7 @@
     fail_msg: |-
       Splunk route doesn't exist. Is Splunk installed on the cluster?
       Use the openshift_splunk_deploy.yml playbook to install a Splunk instance.
+    quiet: true
 
 - name: Obtain Splunk credentials
   kubernetes.core.k8s_info:

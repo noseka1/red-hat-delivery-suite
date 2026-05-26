@@ -12,6 +12,7 @@
     fail_msg: |-
       Quay route doesn't exist. Is Quay installed on the cluster?
       Use the openshift_quay_deploy.yml playbook to install a Quay instance.
+    quiet: true
 
 - ansible.builtin.set_fact:
     quay_hostname: '{{ quay_instance_route.resources.0.spec.host }}'

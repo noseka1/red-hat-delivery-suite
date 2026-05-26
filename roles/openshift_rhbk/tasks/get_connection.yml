@@ -12,6 +12,7 @@
     fail_msg: |-
       Keycloak secret doesn't exist. Is Keycloak installed on the cluster?
       Use the openshift_rhbk_deploy.yml playbook to install a Keycloak instance.
+    quiet: true
 
 - ansible.builtin.import_tasks: get_instance_hostname.yml
 

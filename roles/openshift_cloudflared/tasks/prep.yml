@@ -2,16 +2,19 @@
   ansible.builtin.assert:
     that: cloudflared_tunnel_origin_cert | length > 0
     fail_msg: Tunnel origin certificate is missing, you must set cloudflared_tunnel_origin_cert.
+    quiet: true
 
 - name: Check that the domain suffix was provided
   ansible.builtin.assert:
     that: cloudflared_domain_suffix | length > 0
     fail_msg: Domain suffix is missing, you must set the variable cloudflared_domain_suffix.
+    quiet: true
 
 - name: Check that the target hostname was provided
   ansible.builtin.assert:
     that: cloudflared_target_hostname | length > 0
     fail_msg: Target hostname is missing, you must set the variable cloudflared_target_hostname.
+    quiet: true
 
 - ansible.builtin.set_fact:
     cloudflared_tunnel_name: '{{ cloudflared_target_hostname }}'
