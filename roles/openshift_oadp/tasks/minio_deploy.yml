@@ -14,7 +14,7 @@
 
 - name: Connect to minio through OpenShift route
   ansible.builtin.set_fact:
-    oadp_instance_s3_storage: >
+    oadp_instance_s3_storage: >-
       {{ oadp_instance_s3_storage | combine(
         {"s3_url": "https://" + minio_api_route.resources.0.spec.host,
         "insecure_skip_tls_verify": true}
