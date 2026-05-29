@@ -1,0 +1,16 @@
+osinfralibvirt_workspace_dir: '{{ playbook_dir }}/workspace/openshift_infra_libvirt'
+
+osinfralibvirt_lab_number: 2
+osinfralibvirt_lab_name: lab2
+osinfralibvirt_dir: '{{ osinfralibvirt_workspace_dir }}/mycluster2'
+osinfralibvirt_cluster_name: mycluster2
+
+osinfralibvirt_cluster_bootstrap_count: 0
+osinfralibvirt_cluster_master_count: 1
+osinfralibvirt_cluster_worker_count: 0
+
+osinfralibvirt_dhcp_enabled: true
+osinfralibvirt_external_loadbalancer: true
+
+osinfralibvirt_disk_size: 300G
+osinfralibvirt_boot_image: ''

@@ -1,0 +1,62 @@
+<domain type='kvm'>
+  <name>{{ item.fqdn }}</name>
+  <uuid>00000000-0000-000{{ osinfralibvirt_lab_number }}-00{{ item.number }}-000000000000</uuid>
+  <memory unit='GiB'>96</memory>
+  <vcpu>32</vcpu>
+  <os>
+    <type machine='q35'>hvm</type>
+    <bootmenu enable='yes'/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <ioapic driver='qemu'/>
+  </features>
+  <cpu mode='host-passthrough'/>
+  <clock offset='utc'>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='hpet' present='no'/>
+  </clock>
+  <devices>
+    <disk type='file' device='disk'>
+      <driver name='qemu' type='qcow2' discard='unmap'/>
+      <source file='{{ osinfralibvirt_dir }}/disks/{{ item.fqdn }}.qcow2'/>
+      <target bus='virtio' dev='vda'/>
+      <boot order='1'/>
+    </disk>
+    <disk type='file' device='cdrom'>
+      <driver name='qemu' type='raw'/>
+      <source file='{{ osinfralibvirt_boot_image }}'/>
+      <target dev='sda' bus='sata'/>
+      <boot order='2'/>
+    </disk>
+    <interface type='network'>
+      <mac address='52:54:00:0{{ osinfralibvirt_lab_number }}:{{ item.number }}:00'/>
+      <source network='lab{{ osinfralibvirt_lab_number }}'/>
+      <model type='virtio'/>
+    </interface>
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+    <console type='pty'>
+      <target type='serial'/>
+      <log file='{{ osinfralibvirt_dir }}/vmlogs/{{ item.fqdn }}.console.log' append='off'/>
+    </console>
+    <channel type='unix'>
+      <source mode='bind'/>
+      <target type='virtio' name='org.qemu.guest_agent.0'/>
+    </channel>
+    <graphics type='vnc' autoport='yes' keymap='en-us' listen='127.0.0.1'/>
+    <video>
+      <model type='virtio'/>
+    </video>
+    <memballoon model='virtio'/>
+    <rng model='virtio'>
+      <backend model='random'>/dev/urandom</backend>
+    </rng>
+  </devices>
+  <qemu:commandline xmlns:qemu='http://libvirt.org/schemas/domain/qemu/1.0'>
+    <qemu:arg value='-device' />
+    <qemu:arg value='{"driver":"amd-iommu","intremap":"on"}' />
+  </qemu:commandline>
+</domain>

@@ -33,3 +33,7 @@ collections:
 - name: community.general
   src: https://github.com/ansible-collections/community.general
   version: 12.1.0
+
+- name: community.libvirt
+  src: https://github.com/ansible-collections/community.libvirt
+  version: 2.2.0

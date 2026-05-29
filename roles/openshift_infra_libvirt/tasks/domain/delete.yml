@@ -1,0 +1,7 @@
+- name: Delete domain XML definition
+  ansible.builtin.file:
+    path: '{{ osinfralibvirt_dir }}/domains/{{ item.fqdn }}.xml'
+    state: absent
+  loop: '{{ osinfralibvirt_nodes }}'
+  loop_control:
+    label: '{{ item.fqdn }}'

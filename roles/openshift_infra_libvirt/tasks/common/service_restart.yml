@@ -1,0 +1,18 @@
+- name: Get service {{ service_name }} status
+  ansible.builtin.systemd_service:
+    name: '{{ service_name }}'
+  register: service_status_result
+
+- name: Get stats of config file {{ service_config }}
+  ansible.builtin.stat:
+    path: '{{ service_config }}'
+  register: service_config_result
+
+- name: Restart service {{ service_name }} if configuration changed
+  ansible.builtin.systemd_service:
+    name: '{{ service_name }}'
+    state: restarted
+  when: >-
+    (service_config_result.stat.mtime | int) >=
+    (lookup('pipe', 'date -d "' + service_status_result.status.ActiveEnterTimestamp + '" +%s') | int)
+  become: true

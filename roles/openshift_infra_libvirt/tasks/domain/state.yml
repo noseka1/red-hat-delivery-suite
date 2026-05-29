@@ -1,0 +1,5 @@
+- name: VM {{ lab_state }}
+  community.libvirt.virt:
+    name: '{{ item.fqdn }}'
+    state: '{{ lab_state }}'
+  loop: '{{ osinfralibvirt_nodes }}'

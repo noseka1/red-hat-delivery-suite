@@ -1,0 +1,35 @@
+- when: osinfralibvirt_external_loadbalancer
+  block:
+    - name: Ensure required directories exist
+      ansible.builtin.file:
+        dest: '{{ item }}'
+        state: directory
+        mode: '0755'
+      loop:
+        - '{{ osinfralibvirt_dir }}/haproxy'
+
+    - name: Create haproxy.cfg
+      ansible.builtin.template:
+        src: haproxy/haproxy.cfg
+        dest: '{{ osinfralibvirt_dir }}/haproxy/haproxy.cfg'
+
+    - name: Enable and start haproxy
+      ansible.builtin.systemd_service:
+        name: '{{ osinfralibvirt_lab_name }}-haproxy'
+        enabled: true
+        state: started
+      become: true
+
+    - ansible.builtin.import_tasks: common/service_restart.yml
+      vars:
+        service_name: '{{ osinfralibvirt_lab_name }}-haproxy'
+        service_config: '{{ osinfralibvirt_dir }}/haproxy/haproxy.cfg'
+
+- when: not osinfralibvirt_external_loadbalancer
+  block:
+    - name: Disable haproxy pod
+      service:
+        name: '{{ osinfralibvirt_lab_name }}-haproxy'
+        state: stopped
+        enabled: false
+      become: true

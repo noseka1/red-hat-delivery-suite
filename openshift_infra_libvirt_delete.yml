@@ -1,0 +1,6 @@
+- hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.import_role:
+        name: openshift_infra_libvirt
+        tasks_from: delete.yml

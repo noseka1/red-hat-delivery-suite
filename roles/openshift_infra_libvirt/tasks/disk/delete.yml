@@ -1,0 +1,4 @@
+- name: Delete directory {{ osinfralibvirt_dir }}/disks
+  ansible.builtin.file:
+    dest: '{{ osinfralibvirt_dir }}/disks'
+    state: absent

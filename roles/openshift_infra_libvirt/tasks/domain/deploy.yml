@@ -1,0 +1,24 @@
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    dest: '{{ item }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - '{{ osinfralibvirt_dir }}/domains'
+    - '{{ osinfralibvirt_dir }}/vmlogs'
+
+- name: Generate domain XML definition
+  ansible.builtin.template:
+    src: domain/domain.xml
+    dest: '{{ osinfralibvirt_dir }}/domains/{{ item.fqdn }}.xml'
+  loop: '{{ osinfralibvirt_nodes }}'
+  loop_control:
+    label: '{{ item.fqdn }}'
+
+- name: Define domain in libvirt
+  community.libvirt.virt:
+    command: define
+    xml: '{{ lookup("file", osinfralibvirt_dir + "/domains/" + item.fqdn + ".xml") }}'
+  loop: '{{ osinfralibvirt_nodes }}'
+  loop_control:
+    label: '{{ item.fqdn }}'

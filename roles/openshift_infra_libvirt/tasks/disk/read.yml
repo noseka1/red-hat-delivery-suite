@@ -1,0 +1,50 @@
+- name: Obtain list of domain XML files
+  set_fact:
+    disk_domain_files: >-
+      {{ lookup('community.general.filetree', osinfralibvirt_dir + '/domains') }}
+
+- name: Convert from dict to list
+  set_fact:
+    disk_domain_files: >-
+      {{ [ disk_domain_files ] }}
+  when: disk_domain_files | type_debug == 'dict'
+
+- name: Read domain XML files
+  slurp:
+    path: '{{ item.src }}'
+  register: disk_domain_xml_result
+  loop: '{{ disk_domain_files }}'
+  loop_control:
+    label: '{{ item.src }}'
+
+- name: Extract domain disks
+  community.general.xml:
+    xmlstring: '{{ item.content | b64decode }}'
+    xpath: '/domain/devices/disk[@device="disk"]/source'
+    content: attribute
+  register: disk_domain_disks_result
+  loop: '{{ disk_domain_xml_result.results }}'
+  loop_control:
+    label: '{{ item.source }}'
+
+- name: Set disk_files
+  set_fact:
+    disk_files: []
+
+- name: Add to disk_files
+  set_fact:
+    disk_files: '{{ disk_files + [ item ] }}'
+  loop: '{{ disk_domain_disks_result.results | json_query("[].matches[].source.file") }}'
+
+- name: Sort disk files
+  set_fact:
+    disk_files: '{{ disk_files | sort }}'
+  loop: '{{ disk_domain_disks_result.results | json_query("[].matches[].source.file") }}'
+
+- name: Collect disk file stat
+  stat:
+    path: '{{ item }}'
+    get_checksum: false
+    get_mime: false
+  register: disk_stat_result
+  loop: '{{ disk_files }}'

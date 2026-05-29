@@ -1,0 +1,25 @@
+- name: Ensure required directories exist
+  ansible.builtin.file:
+    dest: '{{ item }}'
+    state: directory
+    mode: '0755'
+  loop:
+    - '{{ osinfralibvirt_dir }}/dnsmasq/dnsmasq.d'
+    - '{{ osinfralibvirt_dir }}/dnsmasq/var'
+
+- name: Create dnsmasq.conf
+  ansible.builtin.template:
+    src: dnsmasq/dnsmasq.conf
+    dest: '{{ osinfralibvirt_dir }}/dnsmasq/dnsmasq.d/dnsmasq.conf'
+
+- name: Enable and start dnsmasq
+  ansible.builtin.systemd_service:
+    name: '{{ osinfralibvirt_lab_name }}-dnsmasq'
+    enabled: true
+    state: started
+  become: true
+
+- ansible.builtin.import_tasks: common/service_restart.yml
+  vars:
+    service_name: '{{ osinfralibvirt_lab_name }}-dnsmasq'
+    service_config: '{{ osinfralibvirt_dir }}/dnsmasq/dnsmasq.d/dnsmasq.conf'

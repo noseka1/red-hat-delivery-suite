@@ -1,0 +1,13 @@
+- ansible.builtin.import_tasks: domain/nodes.yml
+
+- ansible.builtin.import_tasks: domain/state.yml
+  vars:
+    lab_state: destroyed
+
+- ansible.builtin.import_tasks: domain/command.yml
+  vars:
+    lab_command: undefine
+
+- ansible.builtin.import_tasks: disk/delete.yml
+
+- ansible.builtin.import_tasks: domain/delete.yml

@@ -1,0 +1,18 @@
+- name: Ensure required directory exists
+  ansible.builtin.file:
+    dest: '{{ osinfralibvirt_dir }}/disks'
+    state: directory
+    mode: '0755'
+
+- ansible.builtin.import_tasks: disk/read.yml
+
+- name: Create disk with size of {{ osinfralibvirt_disk_size }} if it doesn't exist
+  ansible.builtin.command: |
+    qemu-img create \
+      --format qcow2 \
+      {{ item }} \
+      {{ osinfralibvirt_disk_size }}
+  when: not disk_stat_result.results[disk_index].stat.exists
+  loop: '{{ disk_files }}'
+  loop_control:
+    index_var: disk_index

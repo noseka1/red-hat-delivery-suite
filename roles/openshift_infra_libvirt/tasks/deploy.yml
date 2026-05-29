@@ -1,0 +1,14 @@
+- ansible.builtin.import_tasks: dnsmasq/deploy.yml
+
+- ansible.builtin.import_tasks: haproxy/deploy.yml
+
+- ansible.builtin.import_tasks: domain/nodes.yml
+
+- ansible.builtin.import_tasks: domain/deploy.yml
+
+- ansible.builtin.import_tasks: disk/create.yml
+
+- ansible.builtin.import_tasks: domain/state.yml
+  vars:
+    lab_state: running
+  when: osinfralibvirt_boot_image | length > 0

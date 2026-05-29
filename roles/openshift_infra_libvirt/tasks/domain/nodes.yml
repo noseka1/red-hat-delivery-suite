@@ -1,0 +1,28 @@
+- name: Add bootstrap node
+  ansible.builtin.set_fact:
+    osinfralibvirt_nodes: >-
+      {{ osinfralibvirt_nodes | default([]) + [
+        { "fqdn": "bootstrap." ~ osinfralibvirt_cluster_name ~ ".example.com",
+          "number": 20
+        }]
+      }}
+
+- name: Add master nodes
+  ansible.builtin.set_fact:
+    osinfralibvirt_nodes: >-
+      {{ osinfralibvirt_nodes | default([]) + [
+        { "fqdn": "master" ~ item ~ "." ~ osinfralibvirt_cluster_name ~ ".example.com",
+          "number": 20 + item
+        }]
+      }}
+  loop: '{{ range(1, osinfralibvirt_cluster_master_count + 1) | list }}'
+
+- name: Add worker nodes
+  ansible.builtin.set_fact:
+    osinfralibvirt_nodes: >-
+      {{ osinfralibvirt_nodes | default([]) + [
+        { "fqdn": "worker" ~ item ~ "." ~ osinfralibvirt_cluster_name ~ ".example.com",
+          "number": 30 + item
+        }]
+      }}
+  loop: '{{ range(1, osinfralibvirt_cluster_master_count + 1) | list }}'
