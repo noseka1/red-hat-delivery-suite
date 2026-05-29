@@ -1,0 +1,14 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: vm-bridge
+spec:
+  desiredState:
+    ovn:
+      bridge-mappings:
+      # Note that the br-ex bridge comes with the default localnet name
+      # "physnet". This configuration adds another name "localnet-vm-bridge"
+      # to the br-ex bridge
+      - bridge: br-ex
+        localnet: localnet-vm-bridge
+        state: present
