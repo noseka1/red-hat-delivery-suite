@@ -6,6 +6,7 @@
           "number": 20
         }]
       }}
+  loop: '{{ range(1, osinfralibvirt_cluster_bootstrap_count + 1) | list }}'
 
 - name: Add master nodes
   ansible.builtin.set_fact:
@@ -25,4 +26,4 @@
           "number": 30 + item
         }]
       }}
-  loop: '{{ range(1, osinfralibvirt_cluster_master_count + 1) | list }}'
+  loop: '{{ range(1, osinfralibvirt_cluster_worker_count + 1) | list }}'
