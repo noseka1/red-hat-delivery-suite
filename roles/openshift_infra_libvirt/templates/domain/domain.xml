@@ -1,5 +1,5 @@
 <domain type='kvm'>
-  <name>{{ item.fqdn }}</name>
+  <name>{{ item.hostname }}</name>
   <uuid>00000000-0000-000{{ osinfralibvirt_lab_number }}-00{{ item.number }}-000000000000</uuid>
   <memory unit='GiB'>96</memory>
   <vcpu>32</vcpu>
@@ -21,7 +21,7 @@
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2' discard='unmap'/>
-      <source file='{{ osinfralibvirt_dir }}/disks/{{ item.fqdn }}.qcow2'/>
+      <source file='{{ osinfralibvirt_dir }}/disks/{{ item.hostname }}.qcow2'/>
       <target bus='virtio' dev='vda'/>
       <boot order='1'/>
     </disk>
@@ -40,7 +40,7 @@
     <input type='keyboard' bus='ps2'/>
     <console type='pty'>
       <target type='serial'/>
-      <log file='{{ osinfralibvirt_dir }}/vmlogs/{{ item.fqdn }}.console.log' append='off'/>
+      <log file='{{ osinfralibvirt_dir }}/vmlogs/{{ item.hostname }}.console.log' append='off'/>
     </console>
     <channel type='unix'>
       <source mode='bind'/>

@@ -10,15 +10,15 @@
 - name: Generate domain XML definition
   ansible.builtin.template:
     src: domain/domain.xml
-    dest: '{{ osinfralibvirt_dir }}/domains/{{ item.fqdn }}.xml'
+    dest: '{{ osinfralibvirt_dir }}/domains/{{ item.hostname }}.xml'
   loop: '{{ osinfralibvirt_nodes }}'
   loop_control:
-    label: '{{ item.fqdn }}'
+    label: '{{ item.hostname }}'
 
 - name: Define domain in libvirt
   community.libvirt.virt:
     command: define
-    xml: '{{ lookup("file", osinfralibvirt_dir + "/domains/" + item.fqdn + ".xml") }}'
+    xml: '{{ lookup("file", osinfralibvirt_dir + "/domains/" + item.hostname + ".xml") }}'
   loop: '{{ osinfralibvirt_nodes }}'
   loop_control:
-    label: '{{ item.fqdn }}'
+    label: '{{ item.hostname }}'

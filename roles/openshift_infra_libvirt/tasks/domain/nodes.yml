@@ -2,7 +2,7 @@
   ansible.builtin.set_fact:
     osinfralibvirt_nodes: >-
       {{ osinfralibvirt_nodes | default([]) + [
-        { "fqdn": "bootstrap." ~ osinfralibvirt_cluster_name ~ ".example.com",
+        { "hostname": "b1" ~ osinfralibvirt_cluster_name,
           "number": 20
         }]
       }}
@@ -12,7 +12,7 @@
   ansible.builtin.set_fact:
     osinfralibvirt_nodes: >-
       {{ osinfralibvirt_nodes | default([]) + [
-        { "fqdn": "master" ~ item ~ "." ~ osinfralibvirt_cluster_name ~ ".example.com",
+        { "hostname": "m" ~ item ~ osinfralibvirt_cluster_name,
           "number": 20 + item
         }]
       }}
@@ -22,7 +22,7 @@
   ansible.builtin.set_fact:
     osinfralibvirt_nodes: >-
       {{ osinfralibvirt_nodes | default([]) + [
-        { "fqdn": "worker" ~ item ~ "." ~ osinfralibvirt_cluster_name ~ ".example.com",
+        { "hostname": "w" ~ item ~ osinfralibvirt_cluster_name,
           "number": 30 + item
         }]
       }}

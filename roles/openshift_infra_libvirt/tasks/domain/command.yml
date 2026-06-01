@@ -1,5 +1,5 @@
 - name: VM {{ lab_command }}
   community.libvirt.virt:
-    name: '{{ item.fqdn }}'
+    name: '{{ item.hostname }}'
     command: '{{ lab_command }}'
   loop: '{{ osinfralibvirt_nodes }}'
