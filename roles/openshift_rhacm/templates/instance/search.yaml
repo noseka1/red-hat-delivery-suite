@@ -3,7 +3,7 @@ kind: Search
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-    argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true,Prune=false
   name: search-v2-operator
   namespace: open-cluster-management
 spec:
