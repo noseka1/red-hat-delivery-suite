@@ -1,3 +1,8 @@
+# When the pod network is set to be advertised, there is no longer a need to
+# SNAT pod IPs for this network to the node IP. Therefore, when pod network
+# advertisements are enabled, the traffic from these pods will no longer be
+# SNAT'ed on egress.
+# Source: https://github.com/openshift/enhancements/blob/master/enhancements/network/bgp-ovn-kubernetes.md
 apiVersion: k8s.ovn.org/v1
 kind: RouteAdvertisements
 metadata:
