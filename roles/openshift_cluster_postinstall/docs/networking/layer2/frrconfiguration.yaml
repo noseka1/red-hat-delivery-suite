@@ -10,7 +10,7 @@ spec:
     routers:
     - asn: 64512
       neighbors:
-      - address: 192.168.50.1
+      - address: 192.168.30.1
         asn: 65000
         # Prevent error: DisableMP==false not supported
         disableMP: true
