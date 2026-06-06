@@ -1,0 +1,20 @@
+# Prior to defining the EgressIP, label the nodes to make them eligible to
+# host the egressIP, for example:
+# oc label node m1mycluster3 k8s.ovn.org/egress-assignable=
+apiVersion: k8s.ovn.org/v1
+kind: EgressIP
+metadata:
+  name: example
+spec:
+  egressIPs:
+  # Egress IPs must be within an IP subnet that has been assigned to one of the
+  # node network interfaces (primary or any other interface).
+  - 192.168.30.101
+  - 192.168.30.102
+  - 192.168.30.103
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.io/metadata.name
+      operator: In
+      values:
+      - egressip-example
