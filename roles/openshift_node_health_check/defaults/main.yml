@@ -13,17 +13,17 @@ fenceagents_remediation_agent: fence_redfish
 # https://github.com/ClusterLabs/fence-agents/blob/07285aacbc2194c6a2dfc7dd62dda9a3308bc243/agents/redfish/fence_redfish.py
 #
 fenceagents_remediation_node_parameters: {}
-#  master1.mycluster8.example.com:
+#  m1mycluster8.mycluster8.example.com:
 #    '--systems-uri': /redfish/v1/Systems/00000000-0000-0008-0021-000000000000
-#  master2.mycluster8.example.com:
+#  m2mycluster8.mycluster8.example.com:
 #    '--systems-uri': /redfish/v1/Systems/00000000-0000-0008-0022-000000000000
-#  master3.mycluster8.example.com:
+#  m3mycluster8.mycluster8.example.com:
 #    '--systems-uri': /redfish/v1/Systems/00000000-0000-0008-0023-000000000000
-#  worker1.mycluster8.example.com:
+#  w1mycluster8.mycluster8.example.com:
 #    '--systems-uri': /redfish/v1/Systems/00000000-0000-0008-0031-000000000000
-#  worker2.mycluster8.example.com:
+#  w2mycluster8.mycluster8.example.com:
 #    '--systems-uri': /redfish/v1/Systems/00000000-0000-0008-0032-000000000000
-#  worker3.mycluster8.example.com:
+#  w3mycluster8.mycluster8.example.com:
 #    '--systems-uri': /redfish/v1/Systems/00000000-0000-0008-0033-000000000000
 
 fenceagents_remediation_shared_parameters: {}

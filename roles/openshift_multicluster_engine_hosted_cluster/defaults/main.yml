@@ -40,8 +40,8 @@ mcehostedcluster_agent:
       # Choose boot mode 'legacy' or 'UEFI'
       boot_mode: legacy
   cluster_nodes_individual:
-    master1:
-      role: master
+    w1mycluster8:
+      role: worker
       # Optionally, boot the node using BMC:
       bmh:
         bmc:
@@ -49,16 +49,16 @@ mcehostedcluster_agent:
         boot_macaddr: '52:54:00:08:21:00'
         root_device_hints:
           deviceName: /dev/vda
-    master2:
-      role: master
+    w2mycluster8:
+      role: worker
       bmh:
         bmc:
           address: redfish-virtualmedia+https://sushy.lab.example.com:8000/redfish/v1/Systems/00000000-0000-0008-0022-000000000000
         boot_macaddr: '52:54:00:08:22:00'
         root_device_hints:
           deviceName: /dev/vda
-    master3:
-      role: master
+    w3mycluster8:
+      role: worker
       bmh:
         bmc:
           address: redfish-virtualmedia+https://sushy.lab.example.com:8000/redfish/v1/Systems/00000000-0000-0008-0023-000000000000

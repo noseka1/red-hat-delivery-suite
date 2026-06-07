@@ -1,10 +1,10 @@
 apiVersion: nmstate.io/v1
 kind: NodeNetworkConfigurationPolicy
 metadata:
-  name: worker3
+  name: w3mycluster3
 spec:
   nodeSelector:
-    kubernetes.io/hostname: worker3
+    kubernetes.io/hostname: w3mycluster3
   desiredState:
     interfaces:
     - name: odfpublic

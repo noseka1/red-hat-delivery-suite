@@ -32,9 +32,9 @@ Example situation after running the command:
 
 ```
 $ oc get po -n kubevirt-migrate-source -o wide
-NAME                          READY   STATUS      RESTARTS   AGE   IP            NODE      NOMINATED NODE   READINESS GATES
-virt-launcher-example-l7xcb   0/2     Completed   0          81m   10.130.0.26   worker2   <none>           1/1
-virt-launcher-example-llc8g   2/2     Running     0          93s   10.129.0.6    worker1   <none>           1/1
+NAME                          READY   STATUS      RESTARTS   AGE   IP            NODE           NOMINATED NODE   READINESS GATES
+virt-launcher-example-l7xcb   0/2     Completed   0          81m   10.130.0.26   w2mycluster3   <none>           1/1
+virt-launcher-example-llc8g   2/2     Running     0          93s   10.129.0.6    w1mycluster3   <none>           1/1
 ```
 
 The same migration can be accomplished using:
@@ -60,15 +60,15 @@ Example situation after running the command:
 
 ```
 $ oc get po -n kubevirt-migrate-source -o wide
-NAME                          READY   STATUS      RESTARTS   AGE     IP            NODE      NOMINATED NODE   READINESS GATES
-virt-launcher-example-hhbl7   2/2     Running     0          23s     10.128.0.26   master1   <none>           1/1
-virt-launcher-example-llc8g   1/2     Completed   0          3m28s   10.129.0.6    worker1   <none>           1/1
+NAME                          READY   STATUS      RESTARTS   AGE     IP            NODE           NOMINATED NODE   READINESS GATES
+virt-launcher-example-hhbl7   2/2     Running     0          23s     10.128.0.26   m1mycluster3   <none>           1/1
+virt-launcher-example-llc8g   1/2     Completed   0          3m28s   10.129.0.6    w1mycluster3   <none>           1/1
 ```
 
 The same migration can be accomplished using:
 
 ```
-$ virtctl migrate --addedNodeSelector kubernetes.io/hostname=master1 example
+$ virtctl migrate --addedNodeSelector kubernetes.io/hostname=m1mycluster3 example
 ```
 
 ## Volume migration (aka storageclass migration)
@@ -83,9 +83,9 @@ Example situation after running the command:
 
 ```
 $ oc get po -n kubevirt-migrate-source -o wide
-NAME                          READY   STATUS      RESTARTS   AGE     IP            NODE      NOMINATED NODE   READINESS GATES
-virt-launcher-example-hhbl7   0/2     Completed   0          38m     10.128.0.26   master1   <none>           1/1
-virt-launcher-example-z9ft9   2/2     Running     0          6m54s   10.129.0.9    worker1   <none>           1/1
+NAME                          READY   STATUS      RESTARTS   AGE     IP            NODE           NOMINATED NODE   READINESS GATES
+virt-launcher-example-hhbl7   0/2     Completed   0          38m     10.128.0.26   m1mycluster3   <none>           1/1
+virt-launcher-example-z9ft9   2/2     Running     0          6m54s   10.129.0.9    w1mycluster3   <none>           1/1
 ```
 
 ```

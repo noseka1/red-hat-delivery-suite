@@ -27,7 +27,7 @@ No DNS entry is needed for the APIServer endpoint if it is published using the L
 
 ### Publishing APIServer endpoint using NodePort service
 
-DNS entries must exist for `api.<cluster_name>.<base_domain>` and `api-int.<cluster_name>.<base_domain>` pointing to destination where the API Server can be reached. If the API Server is exposed as a service of type NodePort, then the DNS entries can be as simple as A records pointing to one of the nodes in the management cluster (i.e. the cluster running the HCP). For example, DNS entry `api.mycluster20.example.com` and `api-int.mycluster20.example.com` can point to the first master node of the hosting cluster `master1.mycluster5.example.com` (IP address 192.168.50.21). The respective DNSMasq configuration:
+DNS entries must exist for `api.<cluster_name>.<base_domain>` and `api-int.<cluster_name>.<base_domain>` pointing to destination where the API Server can be reached. If the API Server is exposed as a service of type NodePort, then the DNS entries can be as simple as A records pointing to one of the nodes in the management cluster (i.e. the cluster running the HCP). For example, DNS entry `api.mycluster20.example.com` and `api-int.mycluster20.example.com` can point to the first master node of the hosting cluster `m1mycluster5.mycluster5.example.com` (IP address 192.168.50.21). The respective DNSMasq configuration:
 
 ```
 host-record=api.mycluster20.example.com,192.168.50.21

@@ -5,5 +5,5 @@ metadata:
   namespace: kubevirt-migrate-source
 spec:
   addedNodeSelector:
-    kubernetes.io/hostname: master1
+    kubernetes.io/hostname: m1mycluster3
   vmiName: example

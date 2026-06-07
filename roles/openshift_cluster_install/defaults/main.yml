@@ -25,7 +25,7 @@ osclusterinstall_agent:
       password: dummy
       disable_certificate_verification: true
   cluster_nodes_individual:
-    master1:
+    m1mycluster3:
       role: master
       bmc:
         baseuri: sushy.lab.example.com:8000
@@ -39,7 +39,7 @@ osclusterinstall_agent:
         - name: ens3
           macAddress: '52:54:00:03:21:00'
       network_config: {}
-    master2:
+    m2mycluster3:
       role: master
       bmc:
         baseuri: sushy.lab.example.com:8000
@@ -51,7 +51,7 @@ osclusterinstall_agent:
         - name: ens3
           macAddress: '52:54:00:03:22:00'
       network_config: {}
-    master3:
+    m3mycluster3:
       role: master
       bmc:
         baseuri: sushy.lab.example.com:8000
