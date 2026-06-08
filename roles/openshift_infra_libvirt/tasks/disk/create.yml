@@ -4,6 +4,28 @@
     state: directory
     mode: '0755'
 
+- name: Gather facts about libvirt storage pools
+  community.libvirt.virt_pool:
+    command: facts
+
+- when: osinfralibvirt_cluster_name not in ansible_libvirt_pools
+  block:
+    - name: Define libvirt directory storage pool
+      community.libvirt.virt_pool:
+        name: '{{ osinfralibvirt_cluster_name }}'
+        xml: '{{ lookup("template", "pool/pool.xml") }}'
+        command: define
+
+    - name: Start the volume pool
+      community.libvirt.virt_pool:
+        name: '{{ osinfralibvirt_cluster_name }}'
+        command: start
+
+    - name: Autostart the volume pool
+      community.libvirt.virt_pool:
+        name: '{{ osinfralibvirt_cluster_name }}'
+        autostart: true
+
 - ansible.builtin.import_tasks: disk/read.yml
 
 - name: Create disk with size of {{ osinfralibvirt_disk_size }} if it doesn't exist

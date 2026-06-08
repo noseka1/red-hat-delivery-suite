@@ -1,3 +1,19 @@
+- name: Gather facts about libvirt storage pools
+  community.libvirt.virt_pool:
+    command: facts
+
+- when: osinfralibvirt_cluster_name in ansible_libvirt_pools
+  block:
+    - name: Stop the libvirt storage pool
+      community.libvirt.virt_pool:
+        name: '{{ osinfralibvirt_cluster_name }}'
+        command: destroy
+
+    - name: Remove the storage pool definition
+      community.libvirt.virt_pool:
+        name: '{{ osinfralibvirt_cluster_name }}'
+        command: undefine
+
 - name: Delete directory {{ osinfralibvirt_dir }}/disks
   ansible.builtin.file:
     dest: '{{ osinfralibvirt_dir }}/disks'
