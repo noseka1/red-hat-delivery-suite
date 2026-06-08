@@ -1,5 +1,11 @@
+- name: Get list of VMs
+  community.libvirt.virt:
+    command: list_vms
+  register: osinfralibvirt_list_vms_result
+
 - name: VM {{ lab_state }}
   community.libvirt.virt:
     name: '{{ item.hostname }}'
     state: '{{ lab_state }}'
+  when: item.hostname in osinfralibvirt_list_vms_result.list_vms
   loop: '{{ osinfralibvirt_nodes }}'
