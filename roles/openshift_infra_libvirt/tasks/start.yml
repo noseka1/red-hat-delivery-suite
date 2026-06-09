@@ -1,3 +1,5 @@
+- ansible.builtin.import_tasks: domain/nodes.yml
+
 - ansible.builtin.import_tasks: domain/state.yml
   vars:
     lab_state: running
