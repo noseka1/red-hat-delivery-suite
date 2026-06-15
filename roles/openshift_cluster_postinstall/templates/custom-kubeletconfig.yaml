@@ -8,7 +8,7 @@ spec:
     matchLabels:
       machineconfiguration.openshift.io/mco-built-in: ""
   # Automatically determine the optimal system-reserved CPU and memory resources
-  # $ee also https://docs.openshift.com/container-platform/latest/nodes/nodes/nodes-nodes-resources-configuring.html
+  # See also https://docs.openshift.com/container-platform/latest/nodes/nodes/nodes-nodes-resources-configuring.html
   # This should prevent Prometheus alerts like SystemMemoryExceedsReservation
   autoSizingReserved: true
   kubeletConfig:
