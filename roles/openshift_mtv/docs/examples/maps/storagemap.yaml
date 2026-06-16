@@ -1,0 +1,50 @@
+apiVersion: forklift.konveyor.io/v1beta1
+kind: StorageMap
+metadata:
+  name: mymap1
+  namespace: openshift-mtv
+spec:
+  map:
+  - destination:
+      storageClass: local-hostpath
+    source:
+      name: local-hostpath
+  - destination:
+      storageClass: lvms-loop1-vg
+    source:
+      name: lvms-loop1-vg
+  - destination:
+      storageClass: nfs-csi
+    source:
+      name: nfs-csi
+  - destination:
+      storageClass: rook-ceph-block
+    source:
+      name: rook-ceph-block
+  - destination:
+      storageClass: rook-ceph-block-virtualization
+    source:
+      name: rook-ceph-block-virtualization
+  - destination:
+      storageClass: rook-cephfs
+    source:
+      name: rook-cephfs
+  - destination:
+      storageClass: rook-nfs
+    source:
+      name: rook-nfs
+  - destination:
+      storageClass: hostpath-csi-mypool1
+    source:
+      name: hostpath-csi-mypool1
+  provider:
+    destination:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Provider
+      name: host
+      namespace: openshift-mtv
+    source:
+      apiVersion: forklift.konveyor.io/v1beta1
+      kind: Provider
+      name: host
+      namespace: openshift-mtv
