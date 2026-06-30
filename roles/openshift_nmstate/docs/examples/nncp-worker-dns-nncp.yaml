@@ -1,0 +1,13 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: nncp-worker-dns
+spec:
+  desiredState:
+    dns-resolver:
+      config:
+        server:
+        - 192.168.80.2
+        - 8.8.8.8
+  nodeSelector:
+    node-role.kubernetes.io/worker: ""
