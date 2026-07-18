@@ -1,0 +1,26 @@
+---
+{% if mcemanagedcluster_rhacm_detected %}
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  name: {{ mcemanagedcluster_info.cluster_name }}
+  namespace: {{ mcemanagedcluster_info.cluster_name }}
+spec:
+  # Enable application manager to import the managed cluster into Argo CD
+  applicationManager:
+    enabled: true
+  certPolicyController:
+    enabled: true
+  policyController:
+    enabled: true
+{% if mcemanagedcluster_info.clusterwide_proxy %}
+  proxyConfig:
+    httpProxy: {{ mcemanagedcluster_info.clusterwide_proxy.http_proxy }}
+    httpsProxy: {{ mcemanagedcluster_info.clusterwide_proxy.https_proxy }}
+    noProxy: {{ mcemanagedcluster_info.clusterwide_proxy.no_proxy }}
+{% endif %}
+  searchCollector:
+    enabled: true
+{% endif %}

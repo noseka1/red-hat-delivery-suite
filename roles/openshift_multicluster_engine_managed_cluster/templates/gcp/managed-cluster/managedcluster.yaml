@@ -1,0 +1,17 @@
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  labels:
+    region: {{ mcemanagedcluster_info.gcp_region }}
+    name: {{ mcemanagedcluster_info.cluster_name }}
+    vendor: OpenShift
+{% if mcemanagedcluster_info.managed_cluster_set is defined %}
+    cluster.open-cluster-management.io/clusterset: {{ mcemanagedcluster_info.managed_cluster_set }}
+{% endif %}
+  name: {{ mcemanagedcluster_info.cluster_name }}
+spec:
+  # This is required to allow the automatic import of the cluster into Hub.
+  # Without this setting the cluster remains in Detached state.
+  hubAcceptsClient: true

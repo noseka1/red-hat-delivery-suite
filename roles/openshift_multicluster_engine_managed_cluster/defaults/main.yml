@@ -50,6 +50,7 @@ mcemanagedcluster_agent:
         root_device_hints:
           deviceName: /dev/vda
 
+# AWS Blank Open Environment (https://catalog.demo.redhat.com/catalog/all?category=Open_Environments&search=aws&item=babylon-catalog-prod%2Fsandboxes-gpte.sandbox-open.prod)
 mcemanagedcluster_aws:
   cluster_name: mycluster12
   base_domain: sandbox2727.opentlc.com
@@ -79,5 +80,21 @@ mcemanagedcluster_azure:
   base_domain_resource_group_name: XXXX-XXX
   service_network_cidr: 172.32.0.0/16
   cluster_network_cidr: 10.136.0.0/14
+  # managed_cluster_set: tenant-01
+  # generate_name: tenant-01-
+
+# GCP Blank Open Environment (https://catalog.demo.redhat.com/catalog/all?category=Open_Environments&item=babylon-catalog-prod%2Fgcp-gpte.open-environment-gcp.prod)
+mcemanagedcluster_gcp:
+  cluster_name: mycluster13
+  base_domain: bf5rv.gcp.redhatworkshops.io
+  ocp_release_image: 4.21.3-x86_64
+  clusterwide_proxy: {}
+  gcp_service_account_file: '{"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","auth_uri": ...}'
+  gcp_projectid: openenv-bf5rv
+  gcp_region: us-west1
+  control_plane_replicas: 3
+  data_plane_replicas: 3
+  service_network_cidr: 172.30.0.0/16
+  cluster_network_cidr: 10.128.0.0/14
   # managed_cluster_set: tenant-01
   # generate_name: tenant-01-

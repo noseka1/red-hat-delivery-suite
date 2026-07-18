@@ -1,0 +1,58 @@
+- ansible.builtin.set_fact:
+    mcemanagedcluster_info: '{{ mcemanagedcluster_gcp }}'
+
+- ansible.builtin.import_tasks: common/rhacm_detect.yml
+
+- ansible.builtin.import_tasks: common/prereqs_deploy.yml
+
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/mce/managed-cluster/{{ mcemanagedcluster_info.cluster_name }}/cloud-creds'
+    hvault_secret_data:
+      osServiceAccount.json: '{{ mcemanagedcluster_info.gcp_service_account_file }}'
+      projectID: '{{ mcemanagedcluster_info.gcp_projectid }}'
+      pullSecret: '{{ redhat_cloud_pull_secret }}'
+      ssh-privatekey: '{{ generic_ssh_key_pair.private_key }}'
+      ssh-publickey: '{{ generic_ssh_key_pair.public_key }}'
+
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/mce/managed-cluster/{{ mcemanagedcluster_info.cluster_name }}/install-config'
+    hvault_secret_data:
+      install-config.yaml: '{{ lookup("template", "gcp/install-config/install-config.yaml") }}'
+
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/mce/managed-cluster/{{ mcemanagedcluster_info.cluster_name }}/pull-secret'
+    hvault_secret_data:
+      .dockerconfigjson: '{{ redhat_cloud_pull_secret }}'
+
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/mce/managed-cluster/{{ mcemanagedcluster_info.cluster_name }}/ssh-private-key'
+    hvault_secret_data:
+      ssh-privatekey: '{{ generic_ssh_key_pair.private_key }}'
+
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_deploy.yml
+  vars:
+    autogitops_app_src_path: templates/gcp/managed-cluster
+    autogitops_app_dst_path: mce/managed-cluster/{{ mcemanagedcluster_info.cluster_name }}
+    autogitops_app_namespace: '{{ mcemanagedcluster_info.cluster_name }}'
+
+- ansible.builtin.import_tasks: common/hive_wait.yml
+
+- ansible.builtin.import_tasks: common/report_success.yml

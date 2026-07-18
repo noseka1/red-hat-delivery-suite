@@ -1,5 +1,5 @@
 - ansible.builtin.set_fact:
-    mcemanagedcluster_info: '{{ mcemanagedcluster_aws }}'
+    mcemanagedcluster_info: '{{ mcemanagedcluster_gcp }}'
 
 - ansible.builtin.import_role:
     name: openshift_autogitops

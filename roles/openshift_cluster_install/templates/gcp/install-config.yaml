@@ -3,6 +3,7 @@ metadata:
   name: {{ osclusterinstall_info.cluster_name }}
 baseDomain: {{ osclusterinstall_info.base_domain }}
 controlPlane:
+  architecture: amd64
   hyperthreading: Enabled
   name: master
   platform:
@@ -15,6 +16,7 @@ controlPlane:
   replicas: {{ osclusterinstall_info.control_plane_replicas }}
 compute:
 - hyperthreading: Enabled
+  architecture: amd64
   name: worker
   platform:
     gcp:

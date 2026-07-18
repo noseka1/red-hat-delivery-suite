@@ -1,0 +1,28 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: {{ mcemanagedcluster_info.cluster_name }}
+  namespace: {{ mcemanagedcluster_info.cluster_name }}
+  labels:
+    region: {{ mcemanagedcluster_info.gcp_region }}
+    vendor: OpenShift
+spec:
+  baseDomain: {{ mcemanagedcluster_info.base_domain }}
+  clusterName: {{ mcemanagedcluster_info.cluster_name }}
+  controlPlaneConfig:
+    servingCertificates: {}
+  installAttemptsLimit: 2
+  platform:
+    gcp:
+      credentialsSecretRef:
+        name: {{ mcemanagedcluster_info.cluster_name }}-cloud-creds
+      region: {{ mcemanagedcluster_info.gcp_region }}
+  provisioning:
+    installConfigSecretRef:
+      name: {{ mcemanagedcluster_info.cluster_name }}-install-config
+    sshPrivateKeySecretRef:
+      name: {{ mcemanagedcluster_info.cluster_name }}-ssh-private-key
+    imageSetRef:
+      name: img{{ mcemanagedcluster_info.ocp_release_image | regex_replace('_', '-',) }}-appsub
+  pullSecretRef:
+    name: {{ mcemanagedcluster_info.cluster_name }}-pull-secret

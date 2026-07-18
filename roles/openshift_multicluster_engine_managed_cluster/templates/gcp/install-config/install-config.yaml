@@ -1,0 +1,43 @@
+apiVersion: v1
+metadata:
+  name: {{ mcemanagedcluster_info.cluster_name }}
+baseDomain: {{ mcemanagedcluster_info.base_domain }}
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform:
+    gcp:
+      type: n2-standard-8
+      zones:
+      - {{ mcemanagedcluster_info.gcp_region }}-a
+      - {{ mcemanagedcluster_info.gcp_region }}-b
+      - {{ mcemanagedcluster_info.gcp_region }}-c
+  replicas: {{ mcemanagedcluster_info.control_plane_replicas }}
+compute:
+- hyperthreading: Enabled
+  architecture: amd64
+  name: worker
+  platform:
+    gcp:
+      type: n2-standard-4
+      zones:
+      - {{ mcemanagedcluster_info.gcp_region }}-a
+      - {{ mcemanagedcluster_info.gcp_region }}-b
+      - {{ mcemanagedcluster_info.gcp_region }}-c
+  replicas: {{ mcemanagedcluster_info.data_plane_replicas }}
+networking:
+  clusterNetwork:
+  - cidr: {{ mcemanagedcluster_info.cluster_network_cidr }}
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - {{ mcemanagedcluster_info.service_network_cidr }}
+platform:
+  gcp:
+    projectID: {{ mcemanagedcluster_info.gcp_projectid }}
+    region: {{ mcemanagedcluster_info.gcp_region }}
+pullSecret: "" # skip, hive will inject based on its secrets
+sshKey: '{{ generic_ssh_key_pair.public_key }}'
