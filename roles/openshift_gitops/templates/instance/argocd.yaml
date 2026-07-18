@@ -216,6 +216,7 @@ spec:
     resource.customizations.ignoreDifferences.kubevirt.io_VirtualMachine: |
       jqPathExpressions:
         - .spec.template.spec.domain.devices.interfaces[].macAddress
+        - .spec.runStrategy
     # This makes Contour CRD objects sync
     # https://argo-cd.readthedocs.io/en/stable/operator-manual/upgrading/2.14-3.0/#removing-default-ignores-of-preserveunknownfields-for-crd
     resource.customizations.ignoreDifferences.apiextensions.k8s.io_CustomResourceDefinition: |
