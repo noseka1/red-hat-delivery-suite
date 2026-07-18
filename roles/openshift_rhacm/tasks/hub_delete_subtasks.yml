@@ -23,10 +23,22 @@
         name: channels.apps.open.cluster.management.webhook.validator
       - api_version: admissionregistration.k8s.io/v1
         kind: ValidatingWebhookConfiguration
+        name: hypershift.openshift.io
+      - api_version: admissionregistration.k8s.io/v1
+        kind: ValidatingWebhookConfiguration
         name: multiclusterhub-operator-validating-webhook
       - api_version: admissionregistration.k8s.io/v1
         kind: ValidatingWebhookConfiguration
         name: multiclusterengines.multicluster.openshift.io
+      - api_version: admissionregistration.k8s.io/v1
+        kind: ValidatingWebhookConfiguration
+        name: ocm-validating-webhook
+      - api_version: admissionregistration.k8s.io/v1
+        kind: MutatingWebhookConfiguration
+        name: hypershift.openshift.io
+      - api_version: admissionregistration.k8s.io/v1
+        kind: MutatingWebhookConfiguration
+        name: ocm-mutating-webhook
       - api_version: v1
         kind: Namespace
         name: hive
