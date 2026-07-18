@@ -19,4 +19,6 @@
       - api_version: admissionregistration.k8s.io/v1
         kind: ValidatingWebhookConfiguration
         name: multiclusterengines.multicluster.openshift.io
-
+      - api_version: admissionregistration.k8s.io/v1
+        kind: ValidatingWebhookConfiguration
+        name: ocm-validating-webhook
