@@ -129,6 +129,7 @@ NAME           STATE                    CONSUMER                    ONLINE   ERR
 m1mycluster9   externally provisioned   mycluster9-hk2rm-master-0   true             21h
 m2mycluster9   externally provisioned   mycluster9-hk2rm-master-1   true             21h
 m3mycluster9   inspecting               mycluster9-hk2rm-master-2   true             4m43s
+```
 
 The restored master node is no longer `externally provisioned` but `provisioned`:
 
