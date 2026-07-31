@@ -12,7 +12,7 @@ m1mycluster9   externally provisioned   mycluster9-hk2rm-master-0   true        
 m2mycluster9   externally provisioned   mycluster9-hk2rm-master-1   true             19h
 m3mycluster9   externally provisioned   mycluster9-hk2rm-master-2   true             19h
 ```
-Remove the **metal3.io/autoscale-to-hosts** annotation from the worker machineset if it is there. This annotation interferes with the reprovisioning of the master node. We will restore this annotation after the master node is provisioned:
+Remove the **metal3.io/autoscale-to-hosts** annotation from the worker MachineSet if it is there. This annotation interferes with the reprovisioning of the master node. We will restore this annotation after the master node is provisioned:
 
 ```
 $ oc annotate machineset -n openshift-machine-api mycluster9-hk2rm-worker-0 metal3.io/autoscale-to-hosts-
@@ -143,7 +143,7 @@ m2mycluster9   externally provisioned   mycluster9-hk2rm-master-1   true        
 m3mycluster9   provisioned              mycluster9-hk2rm-master-2   true             63m
 ```
 
-Restore the **metal3.io/autoscale-to-hosts** annotation on the worker machineset if it was originally present:
+Restore the **metal3.io/autoscale-to-hosts** annotation on the worker MachineSet if it was originally present:
 
 ```
 $ oc annotate machineset -n openshift-machine-api mycluster9-hk2rm-worker-0 metal3.io/autoscale-to-hosts=""
