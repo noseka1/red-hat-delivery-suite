@@ -32,6 +32,13 @@ $ oc get bmh -n openshift-machine-api m3mycluster9 -o yaml > m3mycluster9-bmh.ya
 $ oc get secret -n openshift-machine-api m3mycluster9-bmc-secret -o yaml > m3mycluster9-bmc-secret-secret.yaml
 ```
 
+If the master node to be replaced is still part of the OpenShift cluster, we need to remove it from the cluster. For that, make sure that OpenShift won't power the node up by executing:
+
+```
+$ oc patch bmh -n openshift-machine-api m3mycluster9 --type json --patch '[{"op":"add","path":"/spec/online","value":false}]'
+```
+You can now power off the physical machine. The status of the node in OpenShift should turn to NotReady in a few moments.
+
 Next, delete the resources of the "failed" master node from the cluster. Note that this will remove the master node from the cluster:
 
 ```
@@ -42,7 +49,9 @@ $ oc delete machine -n openshift-machine-api mycluster9-hk2rm-master-2
 $ oc delete bmh -n openshift-machine-api m3mycluster9
 ```
 
-Force the BareMetalHost object deletion by removing the finalizer if needed.
+When a cluster node is removed, OpenShift first drains the node and subsequently powers it down. However, the draining process of a master node is hindered by the etcd cluster operator as long as a functioning etcd member is present on that node. By shutting down the node prior to draining, we prevent the etcd cluster operator from blocking the node deletion.
+
+Both Machine and BareMetalHost objects should disappear without any issues. If necessary, you can enforce the deletion of the BareMetalHost object by removing the finalizer.
 
 Delete the Node object (**m3mycluster9** in our case) if still present. The Node object should no longer appear in the list of nodes:
 
