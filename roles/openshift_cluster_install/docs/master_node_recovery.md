@@ -49,7 +49,7 @@ $ oc delete machine -n openshift-machine-api mycluster9-hk2rm-master-2
 $ oc delete bmh -n openshift-machine-api m3mycluster9
 ```
 
-When a cluster node is removed, OpenShift first drains the node and subsequently powers it down. However, the draining process of a master node is blocked by the etcd cluster operator as long as a functioning etcd member is present on that node. By shutting down the node prior to draining, we prevent the etcd cluster operator from blocking the node deletion.
+When a cluster node is removed, OpenShift first drains the node and subsequently powers it down. However, the initiation of the draining process for a master node is blocked by the etcd cluster operator as long as there is an functional etcd member on that node. By shutting down the node prior to draining, we prevent the etcd cluster operator from blocking the node deletion.
 
 Both Machine and BareMetalHost objects should disappear without any issues. If necessary, you can enforce the deletion of the BareMetalHost object by removing the finalizer.
 
