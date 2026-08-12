@@ -158,7 +158,7 @@ service-ca                                 4.21.23   True        False         F
 storage                                    4.21.23   True        False         False      67d
 ```
 
-### Check Pods in Bad State
+### Check for Pods in Bad State
 
 Issue the following command to list pods that are in a failed state:
 
@@ -167,3 +167,73 @@ $ oc get pods -A | grep -E '(CrashLoopBackOff|Error|ContainerStatusUnknown|Image
 ```
 
 Ideally, the output of the above command is empty. If there are failing pods, review each of them and decide if you want to fix them prior to the cluster upgrade.
+
+### Resolve Firing Alerts
+
+Review firing alerts on the cluster. Resolve any alerts that would interfere with the cluster upgrade. In the Administrator perspective of the web console, navigate to Observe → Alerting to list the firing alerts.
+
+While it is important to examine all firing alerts, particular attention should be given to those alerts that are recognized to disrupt the OpenShift upgrade process. Examples of such alerts are:
+
+* **VMCannotBeEvicted**. *Eviction policy for VirtualMachine <vm_name> in namespace <namespace_name> is set to Live Migration but the VM is not migratable*. Verify the configuration of the virtual machine mentioned in the alert. It is possible that the VM is "pinned" to the node by a node selector. If the VM can’t be evicted from the node, the node rolling reboot will be blocked. To avoid this scenario, you can shut down this VM prior to the upgrade and restart it after the upgrade.
+* **ClusterNotUpgradeable**. *In most cases, you will still be able to apply patch releases. Reason AdminAckRequired. For more information refer to oc adm upgrade or ...*. The cluster may require administrator acknowledgement before the cluster can be upgraded. This acknowledgement confirms that the human administrator verified that APIs that have been removed in the target OpenShift version are not used by workloads, tools, or other components running on or interacting with the cluster. See also [Preparing to upgrade to OpenShift Container Platform 4.20](https://access.redhat.com/articles/7130599) (or the version of the page matching your target cluster version).
+
+### Check PodDisruptionBudgets
+
+Review the PodDisruptionBudgets using the command:
+
+```
+$ oc get poddisruptionbudgets.policy -A
+```
+
+```
+NAMESPACE                              NAME                 MIN AVAILABLE   MAX UNAVAILABLE   ALLOWED DISRUPTIONS   AGE
+openshift-console                      console              N/A             1                 1                     67d
+openshift-console                      downloads            N/A             1                 1                     67d
+openshift-image-registry               image-registry       0               N/A               1                     67d
+openshift-ingress                      router-internal      N/A             50%               1                     3d2h
+openshift-nmstate                      nmstate-webhook      0               N/A               1                     33d
+openshift-operator-lifecycle-manager   packageserver-pdb    N/A             1                 1                     67d
+rook-ceph                              rook-ceph-mds-myfs   1               N/A               1                     67d
+rook-ceph                              rook-ceph-osd        N/A             1                 1                     174m
+```
+
+In the command output, the value in the *ALLOWED DISRUPTIONS* must be greater than 0 (zero). If there is a workload with a zero value, that workload will prevent the node to drain. If the node can’t be drained the cluster upgrade will get stuck. There are two options to prevent the PodDisruptionBudget blocking the cluster upgrades:
+
+1. Increase the PodDisruptionBudget for the given workload. This requires a conversation with the owner of the workload. They may need to deploy additional application replicas.
+2. If during the upgrade the node can’t be drained due to the PodDisruptionBudget, restart the workload that is blocking the draining process. Note that restarting the workload is a disruptive operation. Before restarting the workload, check with the workload owner that the disruption is acceptable.
+
+As an exception to the above, PodDisruptionBudgets named `kubevirt-disruption-budget-<xxx>` are always set to allow no disruptions (ALLOWED DISRUPTIONS is zero). This is not an issue for the cluster upgrades and it is by design. It allows OpenShift Virtualization to live-migrate the virtual machine away from the node instead of the virtual machine being restarted during the node draining. You can ignore the zero `kubevirt-disruption-budget-<xxx>` PodDisruptionBudgets, they will not block the cluster upgrade.
+
+### Identify Virtual Machines Pinned to Cluster Node
+
+Search for virtual machines that can’t migrate away from their node:
+
+```
+$ oc get virtualmachines.kubevirt.io -A -o json | jq -r '.items[] | select(.spec.template.spec.nodeSelector) | "\(.metadata.namespace)/\(.metadata.name)\t\(.spec.template.spec.nodeSelector)"'
+```
+
+The example output of the previous command lists virtual machines that won’t be able to migrate away from their node. These virtual machines are pinned to their node. To prevent the node drain from blocking, stop these virtual machines prior to starting the cluster upgrade or update the VM by changing/removing the node selector to allow the VM to run on multiple nodes in the cluster.
+
+In addition to the `nodeSelector`, the VM placement can also be restricted by the `nodeAffinity` field. This command lists any VMs with custom `nodeAffinity` configuration:
+
+```
+$ oc get virtualmachines.kubevirt.io -A -o json | jq -r '.items[] | select(.spec.template.spec.affinity.nodeAffinity) | "\(.metadata.namespace)/\(.metadata.name)\t\(.spec.template.spec.affinity.nodeAffinity)"'
+```
+
+### Check and Set maxUnavailable for Worker MachineConfigPool
+
+Check if `maxUnavailable` for the worker MachineConfigPool is set to 1:
+
+```
+$ oc get machineconfigpools.machineconfiguration.openshift.io worker -o jsonpath='{.spec.maxUnavailable}{"\n"}'
+```
+
+Output of the above command should be 1 or nothing. This makes sure that only one cluster node is updated at a time. Upgrading one node at a time is the safest way to upgrade, however, requires more time to complete.
+
+Alternatively, you can set `maxUnavailable` to a higher number to speed up the upgrade process. The `maxUnvailable` for a specific cluster depends on how much spare capacity was provisioned on the cluster. You can modify the `spec.maxUnavailable` value using the command:
+
+```
+$ oc edit machineconfigpools.machineconfiguration.openshift.io worker
+```
+
+
