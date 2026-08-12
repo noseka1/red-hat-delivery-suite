@@ -46,7 +46,7 @@ Before upgrading the cluster, read through the related documentation:
 
 Check if there is an article specific for your target OCP version in the Red Hat knowledge base, for example [Preparing to upgrade to OpenShift Container Platform 4.20](https://access.redhat.com/articles/7130599). You can use the search box to search for an article for your specific OpenShift version. Follow the instructions in the article.
 
-## Creating proactive Red Hat Support Case
+## Creating Proactive Red Hat Support Case
 
 If you are upgrading a production cluster, open a [PROACTIVE support case](https://access.redhat.com/solutions/3521621) and upload a must-gather to this support case. You can collect the must-gather by logging into the cluster and issuing the following command:
 
