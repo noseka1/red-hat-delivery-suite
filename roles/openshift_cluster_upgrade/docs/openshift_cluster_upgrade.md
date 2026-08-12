@@ -60,7 +60,7 @@ Create a tarball to upload:
 $ tar cJfv must-gather.tar.xz ./must-gather-dir
 ```
 
-## Cluster Upgrade Pre-Flight Checks
+## Cluster Upgrade Pre-Flight Steps
 
 There are several checks you can perform to verify that the cluster is ready for upgrade.
 
@@ -236,4 +236,56 @@ Alternatively, you can set `maxUnavailable` to a higher number to speed up the u
 $ oc edit machineconfigpools.machineconfiguration.openshift.io worker
 ```
 
+### Back up etcd Database
 
+The following steps are based on the documentation section [Backing up etcd data](https://docs.redhat.com/en/documentation/openshift_container_platform/4.22/html/backup_and_restore/control-plane-backup-and-restore#backing-up-etcd-data_backup-etcd).
+
+Start a debug session as root for a control plane node. In the following example, replace the name of the node with your node's name:
+
+```
+$ oc debug -n default $(oc get nodes -l node-role.kubernetes.io/master= -o name | head -n1)
+```
+
+Change your root directory to /host in the debug shell:
+
+```
+$ chroot /host
+```
+
+Execute the `cluster-backup.sh` script in the debug shell and pass in the location to save the backup to:
+
+```
+$ /usr/local/bin/cluster-backup.sh /home/core/assets/backup
+```
+
+Verify that the backup was created successfully. You should see that two files were created in the target directory:
+
+```
+$ ls -al /home/core/assets/backup
+```
+
+Clean up any old etcd backups to prevent running out of disk space.
+
+Exit the debug pod:
+
+```
+$ exit
+```
+
+Create another etcd backup in S3. For that, trigger the job that creates etcd backup and uploads it to the S3 bucket, then verify the logs for the created pod don't show errors:
+
+```
+$ oc create job -n etcd-backup --from=cronjob/etcd-backup etcd-backup-pre-upgrade
+```
+
+```
+$ oc logs -n etcd-backup -l job-name=etcd-backup-pre-upgrade
+```
+
+### Silence All Prometheus Alerts
+
+1. Create an alert silence.
+2. To match all possible alerts, set severity = `(info|warning|critical)` and check the `RegEx` checkbox.
+3.  Add a descriptive comment to your silence. For example: *Silencing all alerts before performing the cluster upgrade to 4.21.23.*
+
+Silence the alerts for 6 hours to provide enough time to complete the upgrade.
