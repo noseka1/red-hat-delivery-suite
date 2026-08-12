@@ -40,6 +40,8 @@ spec:
       bridge:
         port:
         - name: bond1
+        # Allow OVN-Kubernetes to dynamically add its own patch ports to the bridge for internal connectivity,
+        # without NMState treating them as unexpected configuration and removing them.
         allow-extra-patch-ports: true
         options:
           stp: false
