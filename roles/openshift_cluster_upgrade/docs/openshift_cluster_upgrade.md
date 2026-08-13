@@ -15,7 +15,7 @@ We will be upgrading non-production clusters (Sandbox, Dev and QA) first. Any is
 
 ## OpenShift Upgrade Cadence
 
-OpenShift clusters will undergo upgrades on a regular cadence. OpenShift upgrades may be linked to hardware upgrades.
+It is a good practice to perform OpenShift cluster upgrades on a regular cadence. OpenShift upgrades may be linked to hardware upgrades.
 
 We intend to utilize the [OpenShift EUS (Extended Update Support)](https://access.redhat.com/support/policy/updates/openshift-eus) releases, which offer the longest possible support windows from Red Hat.
 
