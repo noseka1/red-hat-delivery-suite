@@ -20,11 +20,15 @@ spec:
   # labels on the Node object to find out which CPU models are supported by a specific node. Following the modification of the default CPU model,
   # it is necessary to restart the virtual machines in order for them to adapt the new CPU model.
   #defaultCPUModel: Skylake-Server-noTSX-IBRS
-  #
-  # Migrate the VM on eviction if live migration is possible, or do nothing. Do nothing means that the VM will be restarted on a different node
-  # or shut down depending on its runStrategy setting. This prevents VMs that can't be live-migrated from blocking cluster node reboots.
+  # Allowed values for evictionStrategy:
+  #  - `None` no eviction strategy at cluster level.
+  #  - `LiveMigrate` migrate the VM on eviction; a not live migratable VM with no specific strategy will block the
+  #     drain of the node until manually evicted.
+  #  - `LiveMigrateIfPossible` migrate the VM on eviction if live migration is possible, otherwise directly evict.
+  #  - `External` block the drain, track eviction and notify an external controller.
+  # Defaults to LiveMigrate with multiple worker nodes, None on single worker clusters.
   # See also https://github.com/kubevirt/kubevirt/blob/dd56bf189f1b7cb257af52106a5fd302a8221231/docs/handling-eviction-requests.md
-  evictionStrategy: LiveMigrateIfPossible
+  #evictionStrategy: LiveMigrate
   featureGates:
     # DecentralizedLiveMigration enables the decentralized live migration (cross-cluster migration) feature.
     # This feature allows live migration of VirtualMachineInstances between different clusters or namespaces.
