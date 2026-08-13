@@ -400,7 +400,7 @@ Download the oc command-line client using curl and the copied link, for example:
 $ curl -kv -O https://downloads-openshift-console.apps.mycluster3.example.com/amd64/linux/oc.tar
 ```
 
-Alternatively, you can download the new oc client [mirror.openshift.com](https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/).
+Alternatively, you can download the new oc client from [mirror.openshift.com](https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/).
 
 # Upgrading OLM-Managed Operators
 
