@@ -60,7 +60,7 @@ Create a tarball to upload:
 $ tar cJfv must-gather.tar.xz ./must-gather-dir
 ```
 
-## Cluster Upgrade Pre-Flight Steps
+## Cluster Pre-Upgrade Steps
 
 There are several checks you can perform to verify that the cluster is ready for upgrade.
 
@@ -289,3 +289,135 @@ $ oc logs -n etcd-backup -l job-name=etcd-backup-pre-upgrade
 3.  Add a descriptive comment to your silence. For example: *Silencing all alerts before performing the cluster upgrade to 4.21.23.*
 
 Silence the alerts for 6 hours to provide enough time to complete the upgrade.
+
+## Triggering Cluster Upgrade
+
+Use the following command to switch the OpenShift upgrade channel to the channel that includes the target OpenShift version. For example, to switch to the channel `stable-4.21` which includes the target OpenShift version 4.21.23, issue the following command:
+
+```
+$ oc patch clusterversions.config.openshift.io version --type merge -p '{"spec":{"channel":"stable-4.21"}}'
+```
+
+After updating the channel, OpenShift downloads the version metadata for this channel in the background. Eventually, OpenShift versions available in the channel become available for selection in the OpenShift Web Console.
+
+Select the new OpenShift version through the OpenShift Web Console. Click "Select new version" button and highlight the version needed, if not shown. By default, the "Update cluster" dialog only shows the recommended OpenShift versions that are free of known issues.
+
+If you need to upgrade to an OpenShift version that has known issues, toggle the switch labeled "Include versions with known issues". You may review the known issues identified in a specific version by following the link(s) that pops up when you select a specific version. The OpenShift platform is utilized by numerous customers, and issues are frequently encountered. The overwhelming majority of these issues are issues that will not prevent you from proceeding with the upgrade. These consist of either minor issues, issues for which you have a solution/workaround, or issues that do not impact your clusters in any way.
+
+Ensure that you have chosen the correct target version and click "Update".
+
+## Monitoring Cluster Upgrade
+
+Check the overall upgrade status:
+
+```
+$ oc get clusterversions.config.openshift.io
+```
+
+```
+NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.20.25   True        True          26m     Working towards 4.21.23: 678 of 901 done (75% complete), waiting on authentication, console, kube-storage-version-migrator, monitoring, openshift-apiserver, openshift-controller-manager
+```
+
+Check which cluster operators have been already upgraded:
+
+```
+$ oc get clusteroperators.config.openshift.io
+```
+
+```
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+authentication                             4.20.25   True        False         False      8d
+baremetal                                  4.20.25   True        False         False      111d
+cloud-controller-manager                   4.21.23   True        False         False      111d
+cloud-credential                           4.20.25   True        False         False      111d
+cluster-autoscaler                         4.20.25   True        False         False      111d
+config-operator                            4.21.23   True        False         False      111d
+console                                    4.20.25   True        False         False      61d
+control-plane-machine-set                  4.21.23   True        False         False      111d
+csi-snapshot-controller                    4.20.25   True        False         False      111d
+dns                                        4.20.25   True        False         False      111d
+etcd                                       4.21.23   True        False         False      15d
+image-registry                             4.20.25   True        False         False      111d
+ingress                                    4.20.25   True        False         False      67d
+insights                                   4.20.25   True        False         False      41d
+...
+```
+
+The last cluster operator to be upgraded is the machine-config operator. This operator will upgrade Red Hat CoreOS image on all cluster nodes. During this process the cluster nodes will be rebooted. You can watch the node status using:
+
+```
+$ oc get nodes
+```
+
+## Validating Cluster Upgrade
+
+Verify the cluster operator completed upgrading the cluster:
+
+```
+$ oc get clusterversions.config.openshift.io
+```
+
+```
+NAME      VERSION   AVAILABLE   PROGRESSING   SINCE   STATUS
+version   4.21.23   True        False         4m56s   Cluster version is 4.21.23
+```
+
+Verify the MachineConfigPools. There should be no update in progress (*Updated=True*, *Updating=False*) and the MachineConfigPools should be healthy (*Degraded=False*):
+
+```
+$ oc get machineconfigpools.machineconfiguration.openshift.io
+```
+
+Verify that the cluster nodes are healthy (Ready) using the command:
+
+```
+$ oc get nodes
+```
+
+Verify that all the cluster operators are available, not progressing, and not degraded:
+
+```
+$ oc get clusteroperators.config.openshift.io
+```
+
+## Resolving Any New Firing Alerts
+
+Review any firing alerts on the cluster. Resolve any alerts prior to alert silences expiring to prevent alert notification being sent out. In the Administrator perspective of the OpenShift Web console, navigate to Observe → Alerting to list the firing alerts.
+
+## Upgrading oc Client
+
+The old oc client needs to be replaced with the newer version:
+
+1. Go the the OpenShift Web Console.
+2. Find the question mark icon in the top-right corner.
+3. Click on the question mark icon and choose "Command Line Tools".
+4. In the Command Line Tools page, copy the "Download oc for Linux for x86_64" download link into the clipboard.
+
+Download the oc command-line client using curl and the copied link, for example:
+
+```
+$ curl -kv -O https://downloads-openshift-console.apps.mycluster3.example.com/amd64/linux/oc.tar
+```
+
+Alternatively, you can download the new oc client [mirror.openshift.com](https://mirror.openshift.com/pub/openshift-v4/amd64/clients/ocp/).
+
+# Upgrading OLM-Managed Operators
+
+After upgrading the OpenShift cluster, upgrade the individual OLM-managed operators to match the version of the OpenShift cluster.
+
+## Issue with Differing Operator Versions
+
+Unfortunately, the versions of operators available in the Red Hat catalog change over time. It happens often enough that an operator version that was installed in the lower clusters is no longer available for installation in the higher clusters. Instead, a newer release of the same operator is available for installation. In such a situation, install the newer version of the operator that is closest to the version installed in the lower clusters.
+
+For example, in the lower clusters we installed cluster-logging and loki-operator version 6.5.0. When trying to install the same operators in the higher clusters we realized that the version 6.5.0 was no longer available for installation. Instead, the closest higher version was 6.5.1. In this case, we installed version 6.5.1 even when it was not exactly tested in the lower environments.
+
+Should we go back to lower environments and update their operators to version 6.5.1 to match the version in higher environments? Unfortunately, the same problem with operator versions removed from the catalog affects the updates of lower environments. During the update of lower clusters to version 6.5.1, this version may be replaced with version 6.5.2 in the Red Hat catalog. This makes the update to 6.5.1 in the lower environments impossible.
+
+One solution to the problem of changing operator versions in the Red Hat catalog is to stop using the Red Hat catalog and start using a custom catalog instead. The custom catalog could be a copy of the upstream Red Hat catalog frozen in time. An updated copy would be pulled from Red Hat repositories in a controlled fashion instead of continuously.
+
+# Finalizing Upgrade Process
+
+## Closing Proactive Red Hat Support Case
+
+If you opened a proactive support case for upgrading the cluster and there are no outstanding issues, you can now close this support case.
