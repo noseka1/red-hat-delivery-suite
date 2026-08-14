@@ -37,9 +37,6 @@ spec:
       name: volsync
     - configOverrides: {}
       enabled: true
-      name: cluster-permission
-    - configOverrides: {}
-      enabled: true
       name: multicluster-observability
     - configOverrides: {}
       enabled: true
@@ -61,4 +58,3 @@ spec:
     effect: NoSchedule
     operator: Exists
 {% endif %}
-  separateCertificateManagement: false
