@@ -1,0 +1,17 @@
+apiVersion: hive.openshift.io/v1
+kind: HiveConfig
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  name: hive
+spec:
+  # Configure an additional CA certificate which will be added to kubeconfigs referenced by ALL ClusterDeployments. See also:
+  #
+  # Setting a new CA certificate globally on the managing cluster with hiveconfig
+  # https://github.com/openshift/hive/blob/f1cc92b576a5db92e8a408677192f5e28366f3c4/docs/troubleshooting.md#setting-a-new-ca-certificate-globally-on-the-managing-cluster-with-hiveconfig
+  #
+  # Troubleshooting certificate authority update error on Hive and Assisted Installer clusters
+  # https://docs.redhat.com/en/documentation/red_hat_advanced_cluster_management_for_kubernetes/2.15/html-single/clusters/cluster_mce_overview#ca-update-error-hive-ai
+  #
+  additionalCertificateAuthoritiesSecretRef:
+  - name: additional-ca

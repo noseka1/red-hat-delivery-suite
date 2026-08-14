@@ -24,6 +24,12 @@ mce_ssh_authorized_key: ''
 # Certificate authority certificate that will be used by the assisted-image-service when pulling OS images
 mce_os_image_trusted_ca: ''
 
+# Hive uses a kubeconfig (a secret referenced from ClusterDeployment.spec.clusterMetadata.adminKubeconfigSecretRef) to
+# communicate with managed clusters. The kubeconfig must contain the CA certificates which were used to sign the
+# cluster's API server certificate. If a private CA was used, set this certificate here so that it is added to
+# all kubeconfigs managed by Hive:
+mce_hive_additional_ca: ''
+
 # List of OpenShift installation ISOs to download. You can retrieve the ISO information using:
 # $ openshift-install coreos print-stream-json | jq .architectures.x86_64.artifacts.metal.formats.iso
 # If the list is empty, images for several recent OpenShift versions will be downloaded by default

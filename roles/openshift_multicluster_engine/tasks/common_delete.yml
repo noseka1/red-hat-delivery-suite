@@ -14,3 +14,5 @@
 - ansible.builtin.import_tasks: assisted_installer_delete.yml
 
 - ansible.builtin.import_tasks: manifestwork_delete.yml
+
+- ansible.builtin.import_tasks: hive/delete.yml

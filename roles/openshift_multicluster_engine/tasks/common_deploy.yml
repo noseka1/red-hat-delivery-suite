@@ -1,3 +1,5 @@
+- ansible.builtin.import_tasks: hive/deploy.yml
+
 - ansible.builtin.import_tasks: manifestwork_deploy.yml
 
 - ansible.builtin.import_tasks: assisted_installer_deploy.yml

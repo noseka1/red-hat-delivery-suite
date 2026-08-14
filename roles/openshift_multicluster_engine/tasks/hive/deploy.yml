@@ -1,0 +1,7 @@
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_deploy.yml
+  vars:
+    autogitops_app_src_path: templates/hive
+    autogitops_app_dst_path: mce/hive
+    autogitops_app_namespace: hive
