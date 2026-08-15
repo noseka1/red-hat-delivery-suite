@@ -421,3 +421,61 @@ One solution to the problem of changing operator versions in the Red Hat catalog
 ## Closing Proactive Red Hat Support Case
 
 If you opened a proactive support case for upgrading the cluster and there are no outstanding issues, you can now close this support case.
+
+# OpenShift EUS upgrade from 4.20 to 4.22
+
+Unless the operator documentation says otherwise, the operators are updated as follows:
+
+1. Update the operators to the latest version compatible with OCP 4.20. This step is optional but recommended.
+2. Pause the worker machine pools.
+3. Update OpenShift from 4.20 to 4.21.
+4. Update the operators to the latest version compatible with OCP 4.21.
+5. Update OpenShift from 4.21 to 4.22.
+6. Update the operator to the latest version compatible with OCP 4.22.
+7. Unpause the worker machine pools.
+8. Wait for the worker nodes to update.
+
+## OpenShift Data Foundation
+
+For EUS upgrade of OpenShift Container Platform and OpenShift Data Foundation, make sure that OpenShift Data Foundation is upgraded along with OpenShift Container Platform and compatibility between OpenShift Data Foundation and OpenShift Container Platform is always maintained.
+
+Example workflow of EUS upgrade:
+* Pause the worker machine pools.
+* Update OpenShift <4.y> → OpenShift <4.y+1>.
+* Update OpenShift Data Foundation <4.y> → OpenShift Data Foundation <4.y+1>.
+* Update OpenShift <4.y+1> → OpenShift <4.y+2>.
+* Update to OpenShift Data Foundation <4.y+2>.
+* Unpause the worker machine pools.
+
+Note: You can update to ODF <4.y+2> either before or after worker machine pools are unpaused.
+
+Source: [Overview of the OpenShift Data Foundation update process](https://docs.redhat.com/en/documentation/red_hat_openshift_data_foundation/4.22/html-single/updating_openshift_data_foundation/index#overview-of-the-openshift-data-foundation-update-process_rhodf)
+
+## OpenShift Virtualization
+
+An EUS-to-EUS update starts with updating OpenShift Virtualization to the latest z-stream of the next odd-numbered minor version. Next, update OpenShift Container Platform to the target EUS version. When the OpenShift Container Platform update succeeds, the corresponding update for OpenShift Virtualization becomes available. You can now update OpenShift Virtualization to the target EUS version.
+
+Note: You can directly update OpenShift Virtualization to the latest z-stream release of your current minor version without applying each intermediate z-stream update.
+
+Source: [Control Plane Only updates](https://docs.redhat.com/en/documentation/openshift_container_platform/4.14/html/virtualization/updating#virt-about-control-plane-only-updates_upgrading-virt)
+
+Before beginning a Control Plane Only update, you must:
+
+* Pause worker nodes' machine config pools before you start a Control Plane Only update so that the workers are not rebooted twice.
+* Disable automatic workload updates before you begin the update process. This is to prevent OpenShift Virtualization from migrating or evicting your virtual machines (VMs) until you update to your target EUS version.
+
+  By default, OpenShift Virtualization automatically updates workloads, such as the virt-launcher pod, when you update the OpenShift Virtualization Operator. You can configure this behavior in the `spec.workloadUpdateStrategy` stanza of the HyperConverged custom resource.
+
+Source: [Control Plane Only updates: Prerequisites](https://docs.redhat.com/en/documentation/openshift_container_platform/4.14/html/virtualization/updating#prerequisites_upgrading-virt)
+
+Turn off all workload update methods by running the following command:
+
+```
+$ oc patch hyperconverged kubevirt-hyperconverged -n openshift-cnv --type json -p '[{"op":"replace","path":"/spec/workloadUpdateStrategy/workloadUpdateMethods", "value":[]}]'
+```
+
+Source: [Preventing workload updates during a Control Plane Only update](https://docs.redhat.com/en/documentation/openshift_container_platform/4.22/html/virtualization/updating#virt-preventing-workload-updates-during-control-plane-only-update_upgrading-virt)
+
+# References
+
+* [The Ultimate Guide to OpenShift Update for Cluster Administrators](https://www.redhat.com/en/blog/the-ultimate-guide-to-openshift-update-for-cluster-administrators)
