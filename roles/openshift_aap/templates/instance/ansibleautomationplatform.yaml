@@ -4,7 +4,7 @@ metadata:
   name: aap
   namespace: aap
 spec:
-  admin_password_secret: aap-admin-password
+  admin_password_secret: aap-admin-password-custom
   no_log: false
   controller:
     disabled: false

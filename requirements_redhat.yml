@@ -1,6 +1,6 @@
 collections:
 - name: ansible.controller
-  version: 4.7.9
+  version: 4.8.4
 
 - name: hashicorp.vault
   src: https://github.com/ansible-collections/hashicorp.vault

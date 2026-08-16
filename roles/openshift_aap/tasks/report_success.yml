@@ -9,38 +9,18 @@
   retries: 60
   delay: 10
 
-- name: Obtain eda route
-  kubernetes.core.k8s_info:
-    api_version: route.openshift.io/v1
-    kind: Route
-    name: aap-eda
-    namespace: aap
-  register: aap_eda_route_result
-  until: aap_eda_route_result.resources | length > 0
-  retries: 60
-  delay: 5
-
-- name: Obtain controller route
-  kubernetes.core.k8s_info:
-    api_version: route.openshift.io/v1
-    kind: Route
-    name: aap-controller
-    namespace: aap
-  register: aap_controller_route_result
-  until: aap_controller_route_result.resources | length > 0
-  retries: 120
-  delay: 5
-
 - name: Waiting since {{ now(fmt="%I:%M:%S %p") }} for Ansible Automation Platform to come up
   ansible.builtin.uri:
     url: '{{ item }}'
     validate_certs: true
+    status_code: [ 200, 403 ]
   register: aap_instance_uri_result
   loop:
-    - https://{{ aap_gateway_route_result.resources.0.spec.host }}
-    - https://{{ aap_eda_route_result.resources.0.spec.host }}
-    - https://{{ aap_controller_route_result.resources.0.spec.host }}
-  until: aap_instance_uri_result.status == 200
+    - https://{{ aap_gateway_route_result.resources.0.spec.host }}/api/gateway/v1/ping/
+    - https://{{ aap_gateway_route_result.resources.0.spec.host }}/api/controller/v2/ping/
+    - https://{{ aap_gateway_route_result.resources.0.spec.host }}/api/galaxy/v3/
+    - https://{{ aap_gateway_route_result.resources.0.spec.host }}/api/eda/v1/
+  until: aap_instance_uri_result.status in [ 200, 403 ]
   retries: 60
   delay: 5
 
