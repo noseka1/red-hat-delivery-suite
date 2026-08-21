@@ -1,6 +1,0 @@
-- hosts: all
-  gather_facts: false
-  tasks:
-    - ansible.builtin.import_role:
-        name: openshift_power_monitoring
-        tasks_from: deploy.yml
