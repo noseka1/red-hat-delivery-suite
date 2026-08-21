@@ -132,11 +132,15 @@
     validate_certs: true
     status_code: [ 200 ]
   register: rhbk_service_account_user_result
-  when: rhbk_client_create_result is not skipped
+  when:
+    - rhbk_client_service_accounts_enabled | default(false)
+    - rhbk_client_create_result is not skipped
 
 - ansible.builtin.include_tasks: user_role_assign.yml
   loop: '{{ rhbk_client_assign_roles }}'
-  when: rhbk_client_create_result is not skipped
+  when:
+    - rhbk_client_service_accounts_enabled | default(false)
+    - rhbk_client_create_result is not skipped
 
 - ansible.builtin.import_role:
     name: openshift_common
