@@ -9,8 +9,9 @@ spec:
   # See also: https://github.com/keycloak/keycloak/issues/15107
   - name: proxy
     value: edge
-  - name: proxy-headers
-    value: forwarded
+  # Suppress warning: A ServiceMonitor will not be created because `metrics-enabled` is not true.
+  - name: metrics-enabled
+    value: 'true'
   instances: 1
   db:
     vendor: postgres
@@ -30,6 +31,9 @@ spec:
   http:
     # This will create an edge-terminated Route
     httpEnabled: true
+  proxy:
+    # The proxy headers that should be accepted by the server.
+    headers: forwarded
 {% if rhbk_trusted_ca_cert | length > 0 %}
   truststores:
     trusted-ca-bundle:
