@@ -1,10 +1,6 @@
-- ansible.builtin.import_role:
-    name: openshift_rhbk
-    tasks_from: get_connection.yml
+- ansible.builtin.import_tasks: get_connection.yml
 
-- ansible.builtin.import_role:
-    name: openshift_rhbk
-    tasks_from: get_access_token.yml
+- ansible.builtin.import_tasks: get_access_token.yml
 
 - name: Obtain list of realms
   ansible.builtin.uri:
