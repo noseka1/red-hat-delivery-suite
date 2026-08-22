@@ -15,10 +15,6 @@
 
 - ansible.builtin.import_role:
     name: openshift_rhbk
-    tasks_from: openshift_oauthclient_create.yml
-
-- ansible.builtin.import_role:
-    name: openshift_rhbk
     tasks_from: client_secret_get.yml
 
 - name: Configure OIDC authentication in Argo CD

@@ -1,3 +1,0 @@
-- name: Create keycloak oauth client in OpenShift
-  kubernetes.core.k8s:
-    template: postinstall/keycloak-broker-oauthclient.yaml

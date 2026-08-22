@@ -138,38 +138,6 @@
     - rhbk_client_service_accounts_enabled | default(false)
     - rhbk_client_create_result is not skipped
 
-- ansible.builtin.import_role:
-    name: openshift_common
-    tasks_from: get_infrastructure.yml
-
-- name: Obtain list of identity providers
-  ansible.builtin.uri:
-    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/identity-provider/instances
-    headers:
-      Authorization: Bearer {{ rhbk_access_token }}
-    validate_certs: true
-    status_code: [ 200 ]
-  register: rhbk_identity_providers_list_result
-
-- name: Create identity provider openshift-v4 if it doesn't exist
-  ansible.builtin.uri:
-    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/identity-provider/instances
-    method: POST
-    headers:
-      Authorization: Bearer {{ rhbk_access_token }}
-    body_format: json
-    body:
-      alias: openshift-v4
-      config:
-        baseUrl: '{{ oscommon_infrastructure.status.apiServerURL }}'
-        clientId: keycloak-{{ rhbk_realm_name }}-broker
-        clientSecret: keycloak-{{ rhbk_realm_name }}-broker
-      enabled: true
-      providerId: openshift-v4
-    validate_certs: true
-    status_code: [ 201 ]
-  when: (rhbk_identity_providers_list_result.json | selectattr('providerId', 'equalto', 'openshift-v4') | list | length) == 0
-
 - ansible.builtin.import_tasks: group_create.yml
   vars:
     rhbk_group_name: keycloak-admins
@@ -192,3 +160,5 @@
       groups: [ keycloak-developers ]
   loop_control:
     loop_var: rhbk_user
+
+- ansible.builtin.import_tasks: openshift_broker_create.yml

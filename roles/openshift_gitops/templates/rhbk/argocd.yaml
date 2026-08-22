@@ -6,7 +6,7 @@ metadata:
 spec:
   # Enable OIDC backend
   oidcConfig: |
-    name: OpenShift Single Sign-On
+    name: Keycloak Single Sign-On
     issuer: https://{{ rhbk_hostname }}/realms/argocd
     clientID: argocd
     clientSecret: $oidc.keycloak.clientSecret
