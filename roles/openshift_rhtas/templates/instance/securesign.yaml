@@ -1,0 +1,71 @@
+kind: Securesign
+apiVersion: rhtas.redhat.com/v1alpha1
+metadata:
+  name: securesign
+  namespace: trusted-artifact-signer
+spec:
+  ctlog:
+    monitoring:
+      enabled: true
+  fulcio:
+    certificate:
+      commonName: fulcio.hostname
+      organizationEmail: jdoe@redhat.com
+      organizationName: Red Hat
+    config:
+      OIDCIssuers:
+      - ClientID: trusted-artifact-signer
+        Issuer: https://{{ rhbk_hostname }}/realms/trusted-artifact-signer
+        IssuerURL:  https://{{ rhbk_hostname }}/realms/trusted-artifact-signer
+        Type: email
+    externalAccess:
+      enabled: true
+    monitoring:
+      enabled: true
+  rekor:
+    externalAccess:
+      enabled: true
+    monitoring:
+      enabled: true
+  trillian:
+    database:
+      create: true
+    monitoring:
+      enabled: true
+  tsa:
+    externalAccess:
+      enabled: true
+    monitoring:
+      enabled: true
+    ntpMonitoring:
+      enabled: true
+    signer:
+      certificateChain:
+        intermediateCA:
+        - commonName: tsa.hostname-intermediate
+          organizationEmail: jdoe@redhat.com
+          organizationName: Red Hat
+        leafCA:
+          commonName: tsa.hostname-leaf
+          organizationEmail: jdoe@redhat.com
+          organizationName: Red Hat
+        rootCA:
+          commonName: tsa.hostname-root
+          organizationEmail: jdoe@redhat.com
+          organizationName: Red Hat
+  tuf:
+    externalAccess:
+      enabled: true
+    keys:
+    - name: rekor.pub
+    - name: ctfe.pub
+    - name: fulcio_v1.crt.pem
+    - name: tsa.certchain.pem
+    pvc:
+      accessModes:
+        - ReadWriteOnce
+      retain: true
+      size: 100Mi
+    rootKeySecretRef:
+      name: tuf-root-keys
+    signingConfigURLMode: external

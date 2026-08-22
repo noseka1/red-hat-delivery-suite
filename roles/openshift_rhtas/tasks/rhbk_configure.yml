@@ -1,0 +1,12 @@
+- ansible.builtin.set_fact:
+    rhbk_realm_name: trusted-artifact-signer
+    rhbk_realm_display_name: Trusted Artifact Signer Realm
+    rhbk_client_name: trusted-artifact-signer
+    rhbk_client_display_name: Trusted Artifact Signer Client
+    rhbk_client_root_url: ''
+    rhbk_client_redirect_uris:
+      - '*'
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: realm_create.yml

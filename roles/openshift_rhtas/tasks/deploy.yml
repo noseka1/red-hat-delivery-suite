@@ -1,0 +1,28 @@
+- ansible.builtin.import_role:
+    name: openshift_common
+    tasks_from: install_plan_approve
+  vars:
+    oscomm_subscription_name: rhtas-operator
+    oscomm_subscription_namespace: openshift-operators
+  tags: rhtas_operator
+
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_deploy.yml
+  vars:
+    autogitops_app_src_path: templates/operator
+    autogitops_app_dst_path: rhtas/operator
+    autogitops_app_namespace: openshift-operators
+  tags: rhtas_operator
+
+- ansible.builtin.import_tasks: rhbk_configure.yml
+  tags: rhtas_instance
+
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_deploy.yml
+  vars:
+    autogitops_app_src_path: templates/instance
+    autogitops_app_dst_path: rhtas/instance
+    autogitops_app_namespace: trusted-artifact-signer
+  tags: rhtas_instance
