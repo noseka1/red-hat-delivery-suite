@@ -103,7 +103,7 @@
   register: rhbk_client_create_result
   when: (rhbk_clients_list_result.json | selectattr('clientId', 'equalto', rhbk_client_name) | list | length) == 0
 
-- name: Obtain list of clients
+- name: Obtain list of clients after update
   ansible.builtin.uri:
     url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/clients
     headers:
