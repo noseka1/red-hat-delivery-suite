@@ -1,0 +1,5 @@
+postgresql_namespace: postgresql
+postgresql_manage_namespace: true
+postgresql_app_prefix: ''
+
+postgresql_database_name: example

@@ -1,0 +1,18 @@
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/{{ postgresql_app_prefix }}postgresql/instance/credentials'
+    hvault_secret_data:
+      username: admin
+      password: '{{ generic_user_password }}'
+      admin_password: '{{ generic_user_password }}'
+
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_deploy.yml
+  vars:
+    autogitops_app_src_path: templates/instance
+    autogitops_app_dst_path: '{{ postgresql_app_prefix }}postgresql/instance'
+    autogitops_app_namespace: '{{ postgresql_namespace }}'

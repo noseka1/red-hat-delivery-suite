@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ postgresql_app_prefix }}postgresql
+  namespace: {{ postgresql_namespace }}
+spec:
+  serviceName: {{ postgresql_app_prefix }}postgresql
+  selector:
+    matchLabels:
+      app: {{ postgresql_app_prefix }}postgresql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ postgresql_app_prefix }}postgresql
+    spec:
+      containers:
+      - name: postgresql-db
+        image: registry.redhat.io/rhel10/postgresql-18:1787257577
+        volumeMounts:
+        - mountPath: /var/lib/pgsql/data
+          name: postgresql-data
+        env:
+        - name: POSTGRESQL_DATABASE
+          value: {{ postgresql_database_name }}
+        - name: POSTGRESQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ postgresql_app_prefix }}postgresql-creds
+              key: username
+        - name: POSTGRESQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ postgresql_app_prefix }}postgresql-creds
+              key: password
+        - name: POSTGRESQL_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ postgresql_app_prefix }}postgresql-creds
+              key: admin_password
+  volumeClaimTemplates:
+  - metadata:
+      name: postgresql-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi

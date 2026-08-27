@@ -1,0 +1,7 @@
+---
+{% if postgresql_manage_namespace %}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ postgresql_namespace }}
+{% endif %}
