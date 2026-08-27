@@ -1,3 +1,5 @@
+- ansible.builtin.import_tasks: get_connection.yml
+
 - ansible.builtin.import_tasks: get_access_token.yml
 
 - name: Obtain list of users including their ids
@@ -8,12 +10,10 @@
     validate_certs: false
     status_code: [ 200 ]
   register: user_list_result
-  when: rhbk_access_token is defined
 
 - ansible.builtin.set_fact:
     admin_user_id: >-
       {{ (user_list_result.json | selectattr("username", "equalto", rhbk_username) | first).id }}
-  when: rhbk_access_token is defined
 
 - name: Change admin user password in Keycloak
   ansible.builtin.uri:
@@ -28,9 +28,23 @@
       value: '{{ generic_user_password }}'
     validate_certs: false
     status_code: [ 204 ]
-  when: rhbk_access_token is defined
 
 - name: Change admin user password in Kubernetes secret
   kubernetes.core.k8s:
     template:
       - postinstall/keycloak-initial-admin-secret.yaml
+
+- name: Prolong the logout timeout in Keycloak's management UI
+  ansible.builtin.uri:
+    url: 'https://{{ rhbk_hostname }}/admin/realms/master'
+    method: PUT
+    headers:
+      Authorization: bearer {{ rhbk_access_token }}
+    body_format: json
+    body:
+      # Increase idle timeout from 30 minutes to 24 hours
+      ssoSessionIdleTimeout: '{{ 24 * 60 * 60 | int }}'
+      # Increase session logout from 10 hours to 7 days
+      ssoSessionMaxLifespan: '{{ 7 * 24 * 60 * 60 | int }}'
+    validate_certs: false
+    status_code: [ 204 ]

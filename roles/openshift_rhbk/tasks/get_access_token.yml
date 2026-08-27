@@ -18,4 +18,3 @@
 
 - ansible.builtin.set_fact:
     rhbk_access_token: '{{ rhbk_token_result.json.access_token }}'
-  when: rhbk_token_result.json.access_token is defined

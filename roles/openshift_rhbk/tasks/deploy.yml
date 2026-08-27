@@ -32,8 +32,6 @@
     autogitops_app_dst_path: rhbk/instance
     autogitops_app_namespace: keycloak
 
-- ansible.builtin.import_tasks: get_connection.yml
-
-- ansible.builtin.import_tasks: set_admin_password.yml
+- ansible.builtin.import_tasks: configure.yml
 
 - ansible.builtin.import_tasks: report_success.yml
