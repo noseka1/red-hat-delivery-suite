@@ -16,15 +16,13 @@
 - ansible.builtin.import_tasks: get_instance_hostname.yml
 
 - ansible.builtin.import_role:
-    name: openshift_hashicorp_vault
-    tasks_from: secret_insert.yml
+    name: openshift_postgresql
+    tasks_from: deploy.yml
   vars:
-    hvault_mount_point: autogitops
-    hvault_secret_name: '{{ oscommon_cluster_domain }}/rhbk/instance/keycloak-db'
-    hvault_secret_data:
-      username: admin
-      password: '{{ generic_user_password }}'
-      admin_password: '{{ generic_user_password }}'
+    postgresql_namespace: keycloak
+    postgresql_manage_namespace: false
+    postgresql_app_prefix: keycloak-
+    postgresql_database_name: keycloak
 
 - ansible.builtin.import_role:
     name: openshift_autogitops

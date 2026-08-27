@@ -15,12 +15,12 @@ spec:
   instances: 1
   db:
     vendor: postgres
-    host: postgres-db
+    host: keycloak-postgresql
     usernameSecret:
-      name: keycloak-db
+      name: keycloak-postgresql-creds
       key: username
     passwordSecret:
-      name: keycloak-db
+      name: keycloak-postgresql-creds
       key: password
   hostname:
     # Hostname must be set or the Ingress object won't create the respective Route

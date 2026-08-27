@@ -13,11 +13,13 @@
     autogitops_app_dst_path: rhbk/instance
 
 - ansible.builtin.import_role:
-    name: openshift_hashicorp_vault
-    tasks_from: secret_delete.yml
+    name: openshift_postgresql
+    tasks_from: delete.yml
   vars:
-    hvault_mount_point: autogitops
-    hvault_secret_name: '{{ oscommon_cluster_domain }}/rhbk/instance/keycloak-db'
+    postgresql_namespace: keycloak
+    postgresql_manage_namespace: false
+    postgresql_app_prefix: keycloak-
+    postgresql_database_name: keycloak
 
 - ansible.builtin.import_role:
     name: openshift_autogitops
