@@ -47,4 +47,8 @@
       # Increase session logout from 10 hours to 7 days
       ssoSessionMaxLifespan: '{{ 7 * 24 * 60 * 60 | int }}'
     validate_certs: false
-    status_code: [ 204 ]
+    status_code: [ 204, 503 ]
+  register: rhbk_logout_timeout_result
+  until: rhbk_logout_timeout_result.status == 204
+  retries: 30
+  delay: 10
