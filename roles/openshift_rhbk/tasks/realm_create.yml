@@ -138,27 +138,6 @@
     - rhbk_client_service_accounts_enabled | default(false)
     - rhbk_client_create_result is not skipped
 
-- ansible.builtin.import_tasks: group_create.yml
-  vars:
-    rhbk_group_name: keycloak-admins
-
-- ansible.builtin.import_tasks: group_create.yml
-  vars:
-    rhbk_group_name: keycloak-developers
-
-- ansible.builtin.include_tasks: user_create.yml
-  loop:
-    - name: admin
-      firstname: Some
-      lastname: Admin
-      email: admin@example.com
-      groups: [ keycloak-admins ]
-    - name: devel
-      firstname: Some
-      lastname: Developer
-      email: devel@example.com
-      groups: [ keycloak-developers ]
-  loop_control:
-    loop_var: rhbk_user
-
 - ansible.builtin.import_tasks: openshift_broker_create.yml
+
+- ansible.builtin.import_tasks: realm_add_default_users.yml

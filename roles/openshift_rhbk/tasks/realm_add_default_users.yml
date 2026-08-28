@@ -1,0 +1,22 @@
+- ansible.builtin.import_tasks: group_create.yml
+  vars:
+    rhbk_group_name: keycloak-admins
+
+- ansible.builtin.import_tasks: group_create.yml
+  vars:
+    rhbk_group_name: keycloak-developers
+
+- ansible.builtin.include_tasks: user_create.yml
+  loop:
+    - name: admin
+      firstname: Some
+      lastname: Admin
+      email: admin@example.com
+      groups: [ keycloak-admins ]
+    - name: devel
+      firstname: Some
+      lastname: Developer
+      email: devel@example.com
+      groups: [ keycloak-developers ]
+  loop_control:
+    loop_var: rhbk_user
