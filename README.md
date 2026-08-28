@@ -33,7 +33,6 @@ $ export ANSIBLE_GALAXY_SERVER_AUTOMATION_HUB_TOKEN="<Insert your secret token t
 
 Note that the token will expire after 30 days of inactivity.
 
-
 ```
 $ ansible-galaxy collection install \
   --requirements-file requirements_redhat.yml \
