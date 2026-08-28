@@ -30,6 +30,6 @@
     status_code: [ 201 ]
   when: (rhbk_identity_providers_list_result.json | selectattr('providerId', 'equalto', 'openshift-v4') | list | length) == 0
 
-- name: Create keycloak oauth client in OpenShift
+- name: Create keycloak OAuthClient in OpenShift
   kubernetes.core.k8s:
     template: postinstall/keycloak-broker-oauthclient.yaml
