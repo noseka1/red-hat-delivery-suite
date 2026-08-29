@@ -10,4 +10,4 @@
     name: openshift_multicluster_engine
     tasks_from: common_delete.yml
 
-- ansible.builtin.import_tasks: hub_delete_subtasks.yml
+- ansible.builtin.import_tasks: hub/delete_subtasks.yml

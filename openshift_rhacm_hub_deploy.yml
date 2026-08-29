@@ -3,4 +3,4 @@
   tasks:
     - ansible.builtin.import_role:
         name: openshift_rhacm
-        tasks_from: hub_deploy.yml
+        tasks_from: hub/deploy.yml

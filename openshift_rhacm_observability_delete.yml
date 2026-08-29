@@ -3,4 +3,4 @@
   tasks:
     - ansible.builtin.import_role:
         name: openshift_rhacm
-        tasks_from: observability_delete.yml
+        tasks_from: observability/delete.yml

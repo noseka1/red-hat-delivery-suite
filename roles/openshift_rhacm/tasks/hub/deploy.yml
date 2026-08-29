@@ -1,0 +1,12 @@
+- ansible.builtin.import_tasks: hub/deploy_subtasks.yml
+
+- ansible.builtin.import_tasks: hub/gitops_config.yml
+  when: rhacm_instance_import_to_argocd
+
+- ansible.builtin.import_tasks: hub/users_config.yml
+
+- ansible.builtin.import_role:
+    name: openshift_multicluster_engine
+    tasks_from: common_deploy.yml
+
+- ansible.builtin.import_tasks: hub/success.yml
