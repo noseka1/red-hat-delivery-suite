@@ -1,0 +1,169 @@
+# This Keycloak configuration is based on:
+# https://docs.trustification.dev/trustify/admin/infrastructure.html#_keycloak
+# https://github.com/guacsec/trustify/blob/bcb55e15564a72c8d7ca3a47193b75cd5e8732b2/etc/deploy/compose/config/init-sso/init.sh
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: get_connection.yml
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: get_access_token.yml
+
+- ansible.builtin.set_fact:
+    rhbk_realm_name: trusted-profile-analyzer
+    rhbk_client_root_url: 'https://server-trusted-profile-analyzer.apps.{{ oscommon_cluster_domain }}'
+    rhbk_client_redirect_uris:
+      - 'https://server-trusted-profile-analyzer.apps.{{ oscommon_cluster_domain }}'
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: realm_create.yml
+  vars:
+    rhbk_realm_display_name: Trusted Profile Analyzer Realm
+
+# Create scopes for this realm
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: scope_create.yml
+  vars:
+    rhbk_create_scopes:
+      - name: read:document
+        protocol: openid-connect
+      - name: create:document
+        protocol: openid-connect
+      - name: delete:document
+        protocol: openid-connect
+
+# Create a public client. Must include the sub claim in the access token.
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: client_create.yml
+  vars:
+    rhbk_client_body:
+      baseUrl: ''
+      clientId: trusted-profile-analyzer-public
+      defaultClientScopes:
+        - email
+        - profile
+        - roles
+        - web-origins
+        - read:document
+        - create:document
+        - delete:document
+      description: ''
+      name: Trusted Profile Analyzer Public Client
+      protocol: openid-connect
+      publicClient: true
+      rootUrl: '{{ rhbk_client_root_url }}'
+      redirectUris: '{{ rhbk_client_redirect_uris }}'
+      attributes:
+        access.token.lifespan: '300'
+      protocolMappers:
+       - name: sub
+         protocol: openid-connect
+         protocolMapper: oidc-sub-mapper
+         consentRequired: false
+         config:
+           access.token.claim: 'true'
+           claim.name: sub,
+           jsonType.label: String
+
+# Create confidential client
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: client_create.yml
+  vars:
+    rhbk_client_body:
+      baseUrl: ''
+      clientId: trusted-profile-analyzer-confidential
+      defaultClientScopes:
+        - email
+        - profile
+        - roles
+        - web-origins
+        - read:document
+        - create:document
+      description: ''
+      name: Trusted Profile Analyzer Confidential Client
+      protocol: openid-connect
+      publicClient: false
+      rootUrl: '{{ rhbk_client_root_url }}'
+      redirectUris: '{{ rhbk_client_redirect_uris }}'
+      serviceAccountsEnabled: true
+      attributes:
+        access.token.lifespan: '300'
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: client_secret_get.yml
+  vars:
+    rhbk_client_name: trusted-profile-analyzer-confidential
+
+# Create roles for this realm
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: role_create.yml
+  vars:
+    rhbk_create_roles:
+      - name: trustify-user
+        description: Trustify user
+      - name: trustify-manager
+        description: Trustify manager
+      - name: trustify-admin
+        description: Trustify admin
+
+# Make the trustify-user a default role
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: role_add_to_composite.yml
+  vars:
+    rhbk_role_name: trustify-user
+    rhbk_composite_name: default-roles-{{ rhbk_realm_name }}
+
+# Add the create:document and delete:document scope to the trustify-manager role
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: role_add_to_scope.yml
+  vars:
+    rhbk_role_name: trustify-manager
+    rhbk_scope_name: create:document
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: role_add_to_scope.yml
+  vars:
+    rhbk_role_name: trustify-manager
+    rhbk_scope_name: delete:document
+
+# Assign role trustify-manager to the service account of the confidential client
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: role_assign_to_service_account.yml
+  vars:
+    rhbk_role_name: trustify-manager
+    rhbk_client_name: trusted-profile-analyzer-confidential
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: openshift_broker_create.yml
+
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: realm_add_default_users.yml
+
+# Assign role trustify-manager to user admin
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: role_assign_to_user.yml
+  vars:
+    rhbk_role_name: trustify-manager
+    rhbk_user_name: admin
+
+# Assign role trustify-admin to user admin
+- ansible.builtin.import_role:
+    name: openshift_rhbk
+    tasks_from: role_assign_to_user.yml
+  vars:
+    rhbk_role_name: trustify-admin
+    rhbk_user_name: admin

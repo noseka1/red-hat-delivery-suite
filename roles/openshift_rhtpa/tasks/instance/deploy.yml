@@ -1,0 +1,25 @@
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/trusted-profile-analyzer/instance/storage-credentials'
+    hvault_secret_data:
+      secret_key: '{{ rhtpa_instance_s3_storage.secret_key }}'
+
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/trusted-profile-analyzer/instance/keycloak-credentials'
+    hvault_secret_data:
+      client-secret: '{{ rhbk_client_secret_result.json.value }}'
+
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_deploy.yml
+  vars:
+    autogitops_app_src_path: templates/instance
+    autogitops_app_dst_path: rhtpa/instance
+    autogitops_app_namespace: trusted-profile-analyzer

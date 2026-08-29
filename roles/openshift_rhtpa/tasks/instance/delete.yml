@@ -1,0 +1,19 @@
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_delete.yml
+  vars:
+    autogitops_app_dst_path: rhtpa/instance
+
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_delete.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/trusted-profile-analyzer/instance/keycloak-credentials'
+
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_delete.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/trusted-profile-analyzer/instance/storage-credentials'

@@ -1,0 +1,7 @@
+- ansible.builtin.import_role:
+    name: openshift_minio
+    tasks_from: delete.yml
+  vars:
+    minio_namespace: trusted-profile-analyzer
+    minio_manage_namespace: false
+    minio_app_prefix: rhtpa-

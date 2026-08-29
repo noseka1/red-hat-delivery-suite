@@ -1,0 +1,22 @@
+- ansible.builtin.import_tasks: operator/deploy.yml
+  tags: rhtpa_operator
+
+- ansible.builtin.import_role:
+    name: openshift_common
+    tasks_from: get_infrastructure.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: rhbk/configure.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: minio/deploy.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: database/deploy.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: instance/deploy.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: report_success.yml
+  tags: rhtpa_instance

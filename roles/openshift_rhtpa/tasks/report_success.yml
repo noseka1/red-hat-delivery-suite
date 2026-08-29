@@ -1,0 +1,20 @@
+- name: Obtain server ingress
+  kubernetes.core.k8s_info:
+    api_version: networking.k8s.io/v1
+    kind: Ingress
+    name: server
+    namespace: trusted-profile-analyzer
+  register: rhtpa_ingress_result
+  until: rhtpa_ingress_result.resources | length > 0
+  retries: 120
+  delay: 1
+
+- ansible.builtin.set_fact:
+    msg: |
+      Red Hat Trusted Profile Analyzer installed successfully.
+
+      You can browse to RHTPA web UI and log in as user 'admin':
+      https://{{ rhtpa_ingress_result.resources.0.spec.rules.0.host }}
+
+- ansible.builtin.debug:
+    msg: "{{ msg.split('\n') }}"

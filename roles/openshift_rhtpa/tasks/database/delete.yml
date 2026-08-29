@@ -1,0 +1,8 @@
+- ansible.builtin.import_role:
+    name: openshift_postgresql
+    tasks_from: delete.yml
+  vars:
+    postgresql_namespace: trusted-profile-analyzer
+    postgresql_manage_namespace: false
+    postgresql_app_prefix: rhtpa-
+    postgresql_database_name: rhtpa

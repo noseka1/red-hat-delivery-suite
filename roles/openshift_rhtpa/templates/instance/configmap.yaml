@@ -1,0 +1,7 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: trusted-ca-bundle
+  namespace: trusted-profile-analyzer
+  labels:
+    config.openshift.io/inject-trusted-cabundle: 'true'

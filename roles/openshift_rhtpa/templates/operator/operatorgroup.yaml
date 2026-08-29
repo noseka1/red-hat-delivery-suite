@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: trusted-profile-analyzer
+  namespace: trusted-profile-analyzer
+spec:
+  targetNamespaces:
+  - trusted-profile-analyzer

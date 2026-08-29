@@ -1,0 +1,169 @@
+apiVersion: rhtpa.io/v1
+kind: TrustedProfileAnalyzer
+metadata:
+  name: trustedprofileanalyzer
+  namespace: trusted-profile-analyzer
+spec:
+  appDomain: .apps.{{ oscommon_cluster_domain }}
+  collector: {}
+  database:
+    host: rhtpa-postgresql
+    port: '5432'
+    name: rhtpa
+    username:
+      valueFrom:
+        secretKeyRef:
+          name: rhtpa-postgresql-creds
+          key: username
+    password:
+      valueFrom:
+        secretKeyRef:
+          name: rhtpa-postgresql-creds
+          key: password
+  createDatabase:
+    name: rhtpa
+    username:
+      valueFrom:
+        secretKeyRef:
+          name: rhtpa-postgresql-creds
+          key: username
+    password:
+      valueFrom:
+        secretKeyRef:
+          name: rhtpa-postgresql-creds
+          key: password
+  migrateDatabase:
+    username:
+      valueFrom:
+        secretKeyRef:
+          name: rhtpa-postgresql-creds
+          key: username
+    password:
+      valueFrom:
+        secretKeyRef:
+          name: rhtpa-postgresql-creds
+          key: password
+  extraVolumes:
+    - configMap:
+        name: trusted-ca-bundle
+      name: trusted-ca-bundle
+  extraVolumeMounts:
+  - mountPath: /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+    subPath: ca-bundle.crt
+    name: trusted-ca-bundle
+  image: {}
+  infrastructure:
+    port: 9010
+  ingress:
+    className: openshift-default
+    additionalAnnotations:
+      haproxy.router.openshift.io/timeout: '5m'
+  metrics:
+    enabled: false
+  modules:
+    createDatabase:
+      enabled: true
+      image: {}
+    createImporters:
+      enabled: true
+      image: {}
+      importers:
+        redhat-sboms:
+          sbom:
+            # As of August 2026, this downloads about 3.9 GiB of SBOM data
+            description: All Red Hat SBOMs
+            period: 1d
+            source: https://security.access.redhat.com/data/sbom/v1/
+            keys:
+              - https://security.access.redhat.com/data/97f5eac4.txt#77E79ABE93673533ED09EBE2DCE3823597F5EAC4
+            disabled: false
+            fetchRetries: 50
+        redhat-csaf:
+          csaf:
+            description: All Red Hat CSAF data
+            period: 1d
+            source: redhat.com
+            disabled: true
+            fetchRetries: 50
+        cve:
+          cve:
+            description: CVE list v5
+            period: 1d
+            source: https://github.com/CVEProject/cvelistV5
+            disabled: true
+        osv-github:
+          osv:
+            description: GitHub Advisory Database
+            period: 1d
+            source: https://github.com/github/advisory-database
+            path: advisories
+            disabled: true
+        quay-redhat-user-workloads:
+          quay:
+            description: SBOMs from konflux image attachments
+            period: 1d
+            source: quay.io
+            namespace: redhat-user-workloads
+            disabled: true
+    importer:
+      concurrency: 1
+      enabled: true
+      image: {}
+      infrastructure: {}
+      metrics: {}
+      replicas: 1
+      resources:
+        requests:
+          cpu: 1
+          memory: 8Gi
+      rust: {}
+      tracing: {}
+      workingDirectory:
+        size: 32Gi
+    migrateDatabase:
+      enabled: true
+    server:
+      enabled: true
+      image: {}
+      infrastructure: {}
+      ingress:
+        hosts:
+        - server-trusted-profile-analyzer.apps.{{ oscommon_cluster_domain }}
+      metrics: {}
+      replicas: 1
+      resources:
+        requests:
+          cpu: 1
+          memory: 8Gi
+      rust: {}
+      tracing: {}
+  oidc:
+    issuerUrl: https://{{ rhbk_hostname }}/realms/trusted-profile-analyzer
+    clients:
+      frontend:
+        clientId: trusted-profile-analyzer-public
+      cli:
+        clientId: trusted-profile-analyzer-confidential
+        clientSecret:
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-credentials
+              key: client-secret
+  openshift:
+    useServiceCa: true
+  partOf: trustify
+  replicas: 1
+  rust: {}
+  storage:
+    type: s3
+    region: '{{ rhtpa_instance_s3_storage.region }}'
+    bucket: '{{ rhtpa_instance_s3_storage.bucket }}'
+    accessKey: '{{ rhtpa_instance_s3_storage.access_key }}'
+    secretKey:
+      valueFrom:
+        secretKeyRef:
+          name: storage-credentials
+          key: secret_key
+  tls: {}
+  tracing:
+    enabled: false

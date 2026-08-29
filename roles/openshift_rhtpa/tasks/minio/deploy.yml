@@ -1,0 +1,13 @@
+- ansible.builtin.import_role:
+    name: openshift_minio
+    tasks_from: deploy.yml
+  vars:
+    minio_namespace: trusted-profile-analyzer
+    minio_manage_namespace: false
+    minio_app_prefix: rhtpa-
+
+- ansible.builtin.import_role:
+    name: openshift_minio
+    tasks_from: get_minio_api_route.yml
+  vars:
+    minio_namespace: trusted-profile-analyzer

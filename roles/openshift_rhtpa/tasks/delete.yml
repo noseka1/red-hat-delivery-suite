@@ -1,0 +1,11 @@
+- ansible.builtin.import_tasks: instance/delete.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: database/delete.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: minio/delete.yml
+  tags: rhtpa_instance
+
+- ansible.builtin.import_tasks: operator/delete.yml
+  tags: rhtpa_operator
