@@ -1,0 +1,30 @@
+- name: Obtain list of clients
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/clients
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_clients_list_result
+
+- name: Create client {{ rhbk_client_body.clientId }} if it doesn't exist
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/clients
+    method: POST
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    body_format: json
+    body: '{{ rhbk_client_body }}'
+    validate_certs: true
+    status_code: [ 201 ]
+  register: rhbk_client_create_result
+  when: (rhbk_clients_list_result.json | selectattr('clientId', 'equalto', rhbk_client_body.clientId) | list | length) == 0
+
+- name: Obtain list of clients after update
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/clients
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_clients_list_result

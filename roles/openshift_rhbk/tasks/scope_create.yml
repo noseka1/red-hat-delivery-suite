@@ -1,0 +1,21 @@
+- name: Obtain list of client scopes
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/client-scopes
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_client_scopes_list_result
+
+- name: Create client scope if it doesn't exist
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/client-scopes
+    method: POST
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    body_format: json
+    body: '{{ item }}'
+    validate_certs: true
+    status_code: [ 201 ]
+  loop: '{{ rhbk_create_scopes }}'
+  when: (rhbk_client_scopes_list_result.json | selectattr('name', 'equalto', item.name) | list | length) == 0

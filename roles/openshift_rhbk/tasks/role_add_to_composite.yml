@@ -1,0 +1,12 @@
+- name: Add role {{ rhbk_role_name }} to composite {{ rhbk_composite_name }}
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/roles/{{ rhbk_composite_name }}/composites
+    method: POST
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    body_format: json
+    body:
+      - name: '{{ rhbk_role_name }}'
+        id: '{{ (rhbk_realm_roles_list_result.json | selectattr("name", "equalto", rhbk_role_name) | first).id }}'
+    validate_certs: true
+    status_code: [ 204 ]

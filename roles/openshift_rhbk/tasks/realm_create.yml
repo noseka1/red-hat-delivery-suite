@@ -1,0 +1,24 @@
+- name: Obtain list of realms
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_realms_list_result
+
+- name: Create realm {{ rhbk_realm_name }} if it doesn't exist
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms
+    method: POST
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    body_format: json
+    body:
+      id: '{{ rhbk_realm_name }}'
+      realm: '{{ rhbk_realm_name }}'
+      displayName: '{{ rhbk_realm_display_name }}'
+      enabled: true
+    validate_certs: true
+    status_code: [ 201 ]
+  when: (rhbk_realms_list_result.json | selectattr('id', 'equalto', rhbk_realm_name) | list| length) == 0

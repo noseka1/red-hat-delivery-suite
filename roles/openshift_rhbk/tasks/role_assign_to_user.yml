@@ -1,0 +1,31 @@
+- name: Obtain list of users
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/users?username={{ rhbk_user_name | urlencode }}&exact=true
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_user_get_result
+
+- name: Look up role {{ rhbk_role_name }}
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/roles/{{ rhbk_role_name }}
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_role_get_result
+
+- name: Assign role {{ rhbk_role_name }} to user {{ rhbk_user_get_result.json.0.id }}
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/users/{{ rhbk_user_get_result.json.0.id }}/role-mappings/realm
+    method: POST
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    body_format: json
+    body:
+      - id: '{{ rhbk_role_get_result.json.id }}'
+        name: '{{ rhbk_role_get_result.json.name }}'
+        description: '{{ rhbk_role_get_result.json.description }}'
+    validate_certs: true
+    status_code: [ 204 ]

@@ -1,0 +1,32 @@
+- name: Obtain list of realm roles
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/roles
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_realm_roles_list_result
+
+- name: Create role if it doesn't exist
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/roles
+    method: POST
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    body_format: json
+    body:
+      name: '{{ item.name }}'
+      description: '{{ item.description }}'
+    validate_certs: true
+    status_code: [ 201 ]
+  loop: '{{ rhbk_create_roles }}'
+  when: (rhbk_realm_roles_list_result.json | selectattr('name', 'equalto', item.name) | list | length) == 0
+
+- name: Obtain list of realm roles after update
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/roles
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_realm_roles_list_result

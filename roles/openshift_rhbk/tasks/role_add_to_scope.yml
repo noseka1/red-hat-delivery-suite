@@ -1,0 +1,25 @@
+- name: Obtain list of client scopes
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/client-scopes
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    validate_certs: true
+    status_code: [ 200 ]
+  register: rhbk_client_scopes_list_result
+
+- ansible.builtin.set_fact:
+    rhbk_client_scope_id: >-
+      {{ (rhbk_client_scopes_list_result.json | selectattr("name", "equalto", rhbk_scope_name) | first).id }}
+
+- name: Add role {{ rhbk_role_name }} to client scope {{ rhbk_scope_name }}
+  ansible.builtin.uri:
+    url: https://{{ rhbk_hostname }}/admin/realms/{{ rhbk_realm_name }}/client-scopes/{{ rhbk_client_scope_id }}/scope-mappings/realm
+    method: POST
+    headers:
+      Authorization: Bearer {{ rhbk_access_token }}
+    body_format: json
+    body:
+      - name: '{{ rhbk_role_name }}'
+        id: '{{ (rhbk_realm_roles_list_result.json | selectattr("name", "equalto", rhbk_role_name) | first).id }}'
+    validate_certs: true
+    status_code: [ 204 ]
