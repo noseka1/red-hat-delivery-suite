@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: webhook-receiver-script
-  namespace: {{ webhook_receiver_namespace }}
+  namespace: {{ webhookreceiver_namespace }}
 data:
   run.sh: |
     {{ lookup('file', 'run.sh') | indent(4) }}

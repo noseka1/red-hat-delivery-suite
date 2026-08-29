@@ -3,5 +3,5 @@
     tasks_from: app_deploy.yml
   vars:
     autogitops_app_src_path: templates/instance
-    autogitops_app_dst_path: '{{ webhook_receiver_app_prefix }}webhook-receiver/instance'
-    autogitops_app_namespace: '{{ webhook_receiver_namespace }}'
+    autogitops_app_dst_path: '{{ webhookreceiver_app_prefix }}webhook-receiver/instance'
+    autogitops_app_namespace: '{{ webhookreceiver_namespace }}'

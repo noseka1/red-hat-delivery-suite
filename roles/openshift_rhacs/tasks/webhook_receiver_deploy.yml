@@ -2,9 +2,9 @@
     name: openshift_webhook_receiver
     tasks_from: deploy.yml
   vars:
-    webhook_receiver_namespace: stackrox
-    webhook_receiver_manage_namespace: false
-    webhook_receiver_app_prefix: rhacs-
+    webhookreceiver_namespace: stackrox
+    webhookreceiver_manage_namespace: false
+    webhookreceiver_app_prefix: rhacs-
 
 - ansible.builtin.import_tasks: get_rhacs_central_host.yml
 

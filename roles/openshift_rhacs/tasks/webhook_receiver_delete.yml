@@ -2,6 +2,6 @@
     name: openshift_webhook_receiver
     tasks_from: delete.yml
   vars:
-    webhook_receiver_namespace: stackrox
-    webhook_receiver_manage_namespace: false
-    webhook_receiver_app_prefix: rhacs-
+    webhookreceiver_namespace: stackrox
+    webhookreceiver_manage_namespace: false
+    webhookreceiver_app_prefix: rhacs-

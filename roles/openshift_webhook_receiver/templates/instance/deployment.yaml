@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webhook-receiver
-  namespace: {{ webhook_receiver_namespace }}
+  namespace: {{ webhookreceiver_namespace }}
 spec:
   replicas: 1
   selector:

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: webhook-receiver
-  namespace: {{ webhook_receiver_namespace }}
+  namespace: {{ webhookreceiver_namespace }}
 spec:
   selector:
     app: webhook-receiver

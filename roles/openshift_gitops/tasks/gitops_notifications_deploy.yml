@@ -3,8 +3,8 @@
     name: openshift_webhook_receiver
     tasks_from: direct_deploy.yml
   vars:
-    webhook_receiver_namespace: '{{ gitops_instance_namespace }}'
-    webhook_receiver_manage_namespace: false
+    webhookreceiver_namespace: '{{ gitops_instance_namespace }}'
+    webhookreceiver_manage_namespace: false
 
 - ansible.builtin.import_tasks: get_argocd_route.yml
 
