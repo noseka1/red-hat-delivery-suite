@@ -35,7 +35,7 @@
     namespace: '{{ certman_instance_namespace }}'
   register: certman_test_secret
   until: certman_test_secret.resources | length > 0
-  retries: 12
+  retries: 60
   delay: 5
 
 - name: Extract the certificate information
