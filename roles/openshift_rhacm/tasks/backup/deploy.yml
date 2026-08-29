@@ -33,7 +33,7 @@
 - ansible.builtin.debug:
     msg: >-
       Found {{ backup_result.resources | json_query("[?status.phase=='Completed']") | list | length }} completed backup(s)
-      in namespace '{{ rhacm_backup_namespace }}'
+      in namespace open-cluster-management-backup.
 
 - name: Waiting since {{ now(fmt="%I:%M:%S %p") }} for backup-restore-enabled policy to change status to Compliant
   kubernetes.core.k8s_info:
