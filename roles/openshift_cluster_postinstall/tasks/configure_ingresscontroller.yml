@@ -18,3 +18,39 @@
 - name: Configure default ingresscontroller
   kubernetes.core.k8s:
     template: default-ingresscontroller.yaml
+
+# The load balancer type was changed from "Classic" to "NLB". To effectuate this change, one must delete the service:
+# `oc -n openshift-ingress delete svc/router-default`; the service load-balancer will then be deprovisioned and a new
+# one created. This will most likely cause the new load-balancer to have a different host name and IP address and cause
+# disruption.
+- when: oscommon_infrastructure.status.platformStatus.type == 'AWS'
+  block:
+    - name: Retrieve router-default service configuration
+      kubernetes.core.k8s_info:
+        api_version: v1
+        kind: Service
+        name: router-default
+        namespace: openshift-ingress
+      register: osclusterpostinst_service_result
+
+    - name: Delete router-default service
+      kubernetes.core.k8s:
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: router-default
+            namespace: openshift-ingress
+        state: absent
+      when: >-
+        (osclusterpostinst_service_result.resources.0.metadata.annotations
+          | default({}))['service.beta.kubernetes.io/aws-load-balancer-type'] | default('') != 'nlb'
+      register: osclusterpostinst_delete_service_result
+
+    - ansible.builtin.import_role:
+        name: openshift_common
+        tasks_from: wait_for_stable_cluster.yml
+      vars:
+        stable_cluster_delay: 120
+        stable_cluster_retries: 10
+      when: osclusterpostinst_delete_service_result is changed
