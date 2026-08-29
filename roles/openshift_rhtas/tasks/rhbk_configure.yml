@@ -9,4 +9,4 @@
 
 - ansible.builtin.import_role:
     name: openshift_rhbk
-    tasks_from: realm_create.yml
+    tasks_from: realm_create_and_init.yml
