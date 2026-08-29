@@ -32,9 +32,9 @@
     name: openshift_oauth_proxy
     tasks_from: deploy.yml
   vars:
-    oauth_proxy_name: grafana
-    oauth_proxy_namespace: grafana
-    oauth_proxy_upstream: http://grafana-service:3000
-    oauth_proxy_app_prefix: grafana-
+    oauthproxy_name: grafana
+    oauthproxy_namespace: grafana
+    oauthproxy_upstream: http://grafana-service:3000
+    oauthproxy_app_prefix: grafana-
 
 - ansible.builtin.import_tasks: report_success.yml

@@ -11,9 +11,9 @@
     name: openshift_oauth_proxy
     tasks_from: deploy.yml
   vars:
-    oauth_proxy_name: smtp4dev
-    oauth_proxy_namespace: '{{ smtp4dev_namespace }}'
-    oauth_proxy_upstream: http://smtp4dev
-    oauth_proxy_app_prefix: smtp4dev-
+    oauthproxy_name: smtp4dev
+    oauthproxy_namespace: '{{ smtp4dev_namespace }}'
+    oauthproxy_upstream: http://smtp4dev
+    oauthproxy_app_prefix: smtp4dev-
 
 - ansible.builtin.import_tasks: report_success.yml

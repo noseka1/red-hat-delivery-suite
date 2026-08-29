@@ -10,9 +10,9 @@
     name: openshift_oauth_proxy
     tasks_from: deploy.yml
   vars:
-    oauth_proxy_name: '{{ goldilocks_name }}'
-    oauth_proxy_namespace: '{{ goldilocks_namespace }}'
-    oauth_proxy_upstream: http://{{ goldilocks_name }}-dashboard
-    oauth_proxy_app_prefix: goldilocks-
+    oauthproxy_name: '{{ goldilocks_name }}'
+    oauthproxy_namespace: '{{ goldilocks_namespace }}'
+    oauthproxy_upstream: http://{{ goldilocks_name }}-dashboard
+    oauthproxy_app_prefix: goldilocks-
 
 - ansible.builtin.import_tasks: report_success.yml

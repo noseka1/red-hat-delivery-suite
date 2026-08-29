@@ -23,9 +23,9 @@
     name: openshift_oauth_proxy
     tasks_from: deploy.yml
   vars:
-    oauth_proxy_name: '{{ argo_rollouts_name }}'
-    oauth_proxy_namespace: '{{ argo_rollouts_namespace }}'
-    oauth_proxy_upstream: http://{{ argo_rollouts_name }}-dashboard:3100
-    oauth_proxy_app_prefix: argo-rollouts-
+    oauthproxy_name: '{{ argo_rollouts_name }}'
+    oauthproxy_namespace: '{{ argo_rollouts_namespace }}'
+    oauthproxy_upstream: http://{{ argo_rollouts_name }}-dashboard:3100
+    oauthproxy_app_prefix: argo-rollouts-
 
 - ansible.builtin.import_tasks: report_success.yml

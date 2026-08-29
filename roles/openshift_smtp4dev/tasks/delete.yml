@@ -3,7 +3,7 @@
     name: openshift_oauth_proxy
     tasks_from: delete.yml
   vars:
-    oauth_proxy_app_prefix: smtp4dev-
+    oauthproxy_app_prefix: smtp4dev-
 
 - ansible.builtin.import_role:
     name: openshift_autogitops

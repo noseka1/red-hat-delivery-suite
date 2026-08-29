@@ -1,12 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{ oauth_proxy_name }}-oauth-proxy
+  name: {{ oauthproxy_name }}-oauth-proxy
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{ oauth_proxy_name }}-oauth-proxy
+  name: {{ oauthproxy_name }}-oauth-proxy
 subjects:
 - kind: ServiceAccount
-  name: {{ oauth_proxy_name }}-oauth-proxy
-  namespace: {{ oauth_proxy_namespace }}
+  name: {{ oauthproxy_name }}-oauth-proxy
+  namespace: {{ oauthproxy_namespace }}

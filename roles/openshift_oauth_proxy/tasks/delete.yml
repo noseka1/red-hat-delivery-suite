@@ -2,11 +2,11 @@
     name: openshift_autogitops
     tasks_from: app_delete.yml
   vars:
-    autogitops_app_dst_path: '{{ oauth_proxy_app_prefix }}oauth-proxy/instance'
+    autogitops_app_dst_path: '{{ oauthproxy_app_prefix }}oauth-proxy/instance'
 
 - ansible.builtin.import_role:
     name: openshift_hashicorp_vault
     tasks_from: secret_delete.yml
   vars:
     hvault_mount_point: autogitops
-    hvault_secret_name: '{{ oscommon_cluster_domain }}/{{ oauth_proxy_app_prefix }}oauth-proxy/instance/session'
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/{{ oauthproxy_app_prefix }}oauth-proxy/instance/session'

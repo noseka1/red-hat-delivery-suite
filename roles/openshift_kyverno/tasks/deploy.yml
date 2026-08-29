@@ -40,8 +40,8 @@
     name: openshift_oauth_proxy
     tasks_from: deploy.yml
   vars:
-    oauth_proxy_name: kyverno-policy-reporter
-    oauth_proxy_namespace: '{{ kyverno_policy_reporter_namespace }}'
-    oauth_proxy_upstream: http://kyverno-policy-reporter-ui.kyverno-policy-reporter.svc:8080
-    oauth_proxy_app_prefix: kyverno-
+    oauthproxy_name: kyverno-policy-reporter
+    oauthproxy_namespace: '{{ kyverno_policy_reporter_namespace }}'
+    oauthproxy_upstream: http://kyverno-policy-reporter-ui.kyverno-policy-reporter.svc:8080
+    oauthproxy_app_prefix: kyverno-
   tags: kyverno_policy_reporter

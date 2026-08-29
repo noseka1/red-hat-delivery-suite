@@ -17,7 +17,7 @@
     name: openshift_oauth_proxy
     tasks_from: deploy.yml
   vars:
-    oauth_proxy_name: kafdrop
-    oauth_proxy_namespace: '{{ amqstreams_kafdrop_namespace }}'
-    oauth_proxy_upstream: http://kafdrop:9000
-    oauth_proxy_app_prefix: kafdrop-
+    oauthproxy_name: kafdrop
+    oauthproxy_namespace: '{{ amqstreams_kafdrop_namespace }}'
+    oauthproxy_upstream: http://kafdrop:9000
+    oauthproxy_app_prefix: kafdrop-

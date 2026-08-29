@@ -2,7 +2,7 @@
     name: openshift_oauth_proxy
     tasks_from: delete.yml
   vars:
-    oauth_proxy_app_prefix: argo-rollouts-
+    oauthproxy_app_prefix: argo-rollouts-
 
 - name: Delete Argo Rollouts dashboard
   kubernetes.core.k8s:

@@ -2,7 +2,7 @@
     name: openshift_oauth_proxy
     tasks_from: delete.yml
   vars:
-    oauth_proxy_app_prefix: kyverno-
+    oauthproxy_app_prefix: kyverno-
   tags: kyverno_policy_reporter
 
 - ansible.builtin.import_role:

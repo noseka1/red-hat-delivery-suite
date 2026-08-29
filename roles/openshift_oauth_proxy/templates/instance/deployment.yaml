@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ oauth_proxy_name }}-oauth-proxy
+  name: {{ oauthproxy_name }}-oauth-proxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ oauth_proxy_name }}-oauth-proxy
+      app: {{ oauthproxy_name }}-oauth-proxy
   template:
     metadata:
       labels:
-        app: {{ oauth_proxy_name }}-oauth-proxy
+        app: {{ oauthproxy_name }}-oauth-proxy
     spec:
       containers:
       - args:
@@ -21,15 +21,15 @@ spec:
         - '-https-address=:9091'
         - '-http-address='
         - '-pass-basic-auth=false'
-        - '-openshift-service-account={{ oauth_proxy_name }}-oauth-proxy'
-        - '-upstream={{ oauth_proxy_upstream }}'
+        - '-openshift-service-account={{ oauthproxy_name }}-oauth-proxy'
+        - '-upstream={{ oauthproxy_upstream }}'
         - '-tls-cert=/etc/tls/private/tls.crt'
         - '-tls-key=/etc/tls/private/tls.key'
         - '-cookie-secret-file=/etc/proxy/secrets/session_secret'
         - '-openshift-ca=/etc/pki/tls/cert.pem'
         - '-openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
         - '-openshift-ca=/etc/proxy/configmaps/trusted-ca-bundle/ca-bundle.crt'
-        image: {{ oauth_proxy_image }}
+        image: {{ oauthproxy_image }}
         name: oauth-proxy
         ports:
         - containerPort: 9091
@@ -41,14 +41,14 @@ spec:
           mountPath: /etc/proxy/secrets
         - name: trusted-ca-bundle
           mountPath: /etc/proxy/configmaps/trusted-ca-bundle
-      serviceAccountName: {{ oauth_proxy_name }}-oauth-proxy
+      serviceAccountName: {{ oauthproxy_name }}-oauth-proxy
       volumes:
       - name: oauth-proxy-k8s-tls
         secret:
-          secretName: {{ oauth_proxy_name }}-oauth-proxy-k8s-tls
+          secretName: {{ oauthproxy_name }}-oauth-proxy-k8s-tls
       - name: oauth-proxy
         secret:
-          secretName: {{ oauth_proxy_name }}-oauth-proxy
+          secretName: {{ oauthproxy_name }}-oauth-proxy
       - name: trusted-ca-bundle
         configMap:
-          name: {{ oauth_proxy_name }}-oauth-proxy-trusted-ca-bundle
+          name: {{ oauthproxy_name }}-oauth-proxy-trusted-ca-bundle

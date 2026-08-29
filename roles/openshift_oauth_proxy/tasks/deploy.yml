@@ -3,7 +3,7 @@
     tasks_from: secret_insert.yml
   vars:
     hvault_mount_point: autogitops
-    hvault_secret_name: '{{ oscommon_cluster_domain }}/{{ oauth_proxy_app_prefix }}oauth-proxy/instance/session'
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/{{ oauthproxy_app_prefix }}oauth-proxy/instance/session'
     hvault_secret_data:
       # The cookie_secret must be 16, 24, or 32 bytes to create an AES cipher when pass_access_token == true or cookie_refresh != 0
       session_secret: change me 123456
@@ -13,5 +13,5 @@
     tasks_from: app_deploy.yml
   vars:
     autogitops_app_src_path: templates/instance
-    autogitops_app_dst_path: '{{ oauth_proxy_app_prefix }}oauth-proxy/instance'
-    autogitops_app_namespace: '{{ oauth_proxy_namespace }}'
+    autogitops_app_dst_path: '{{ oauthproxy_app_prefix }}oauth-proxy/instance'
+    autogitops_app_namespace: '{{ oauthproxy_namespace }}'

@@ -1,7 +1,7 @@
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
-  name: {{ oauth_proxy_name }}
+  name: {{ oauthproxy_name }}
 spec:
   port:
     targetPort: oauth-proxy
@@ -10,4 +10,4 @@ spec:
     termination: reencrypt
   to:
     kind: Service
-    name: {{ oauth_proxy_name }}-oauth-proxy
+    name: {{ oauthproxy_name }}-oauth-proxy
