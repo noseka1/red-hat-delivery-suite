@@ -9,4 +9,4 @@
     name: openshift_multicluster_engine
     tasks_from: common_deploy.yml
 
-- ansible.builtin.import_tasks: hub/success.yml
+- ansible.builtin.import_tasks: hub/report_success.yml

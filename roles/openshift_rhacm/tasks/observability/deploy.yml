@@ -26,5 +26,5 @@
     autogitops_app_namespace: open-cluster-management-observability
   tags: rhacm_observability
 
-- ansible.builtin.import_tasks: observability/success.yml
+- ansible.builtin.import_tasks: observability/report_success.yml
   tags: rhacm_observability
