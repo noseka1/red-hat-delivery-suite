@@ -26,7 +26,7 @@ module "eks" {
 
   eks_managed_node_group_defaults = {
     root_volume_type = "gp3"
-    instance_types = ["m6i.xlarge"]
+    instance_types = ["m6i.2xlarge"]
   }
 
   eks_managed_node_groups = {

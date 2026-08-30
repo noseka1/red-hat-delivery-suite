@@ -23,7 +23,7 @@ compute:
         iops: 2000
         size: 100
         type: io1
-      type: m6i.xlarge
+      type: m6i.2xlarge
 networking:
   clusterNetwork:
   - cidr: 10.128.0.0/14
