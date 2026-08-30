@@ -49,3 +49,8 @@ mce_os_images:
     url: https://rhcos.mirror.openshift.com/art/storage/prod/streams/rhel-9.6/builds/9.6.20251212-1/x86_64/rhcos-9.6.20251212-1-live-iso.x86_64.iso
     cpuArchitecture: x86_64
     rootFSUrl: ''
+  - openshiftVersion: '4.22'
+    version: 9.8.20260715-1
+    url: https://rhcos.mirror.openshift.com/art/storage/prod/streams/rhel-9.8/builds/9.8.20260715-1/x86_64/rhcos-9.8.20260715-1-live-iso.x86_64.iso
+    cpuArchitecture: x86_64
+    rootFSUrl: ''
