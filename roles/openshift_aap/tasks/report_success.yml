@@ -5,7 +5,7 @@
     name: aap
     namespace: aap
   register: aap_gateway_route_result
-  until: aap_gateway_route_result.resources | length > 0
+  until: aap_gateway_route_result.resources | default([]) | length > 0
   retries: 60
   delay: 10
 
