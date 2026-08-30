@@ -1,7 +1,7 @@
 mcemanagedcluster_agent:
   cluster_name: mycluster8
   base_domain: example.com
-  ocp_release_image: 4.21.3-x86_64
+  ocp_release_image: 4.22.10-x86_64
   clusterwide_proxy: {}
   ntp_sources: []
   trusted_ca_bundle: ''
@@ -54,7 +54,7 @@ mcemanagedcluster_agent:
 mcemanagedcluster_aws:
   cluster_name: mycluster12
   base_domain: sandbox2727.opentlc.com
-  ocp_release_image: 4.21.3-x86_64
+  ocp_release_image: 4.22.10-x86_64
   control_plane_replicas: 3
   data_plane_replicas: 1
   clusterwide_proxy: {}
@@ -66,7 +66,7 @@ mcemanagedcluster_aws:
 mcemanagedcluster_azure:
   cluster_name: mycluster15
   base_domain: 7xdft.azure.redhatworkshops.io
-  ocp_release_image: 4.21.3-x86_64
+  ocp_release_image: 4.22.10-x86_64
   clusterwide_proxy: {}
   os_service_ppal:
     clientId: XXXXX
@@ -87,7 +87,7 @@ mcemanagedcluster_azure:
 mcemanagedcluster_gcp:
   cluster_name: mycluster13
   base_domain: bf5rv.gcp.redhatworkshops.io
-  ocp_release_image: 4.21.3-x86_64
+  ocp_release_image: 4.22.10-x86_64
   clusterwide_proxy: {}
   gcp_service_account_file: '{"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","auth_uri": ...}'
   gcp_projectid: openenv-bf5rv

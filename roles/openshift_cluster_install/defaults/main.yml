@@ -2,7 +2,7 @@ osclusterinstall_agent:
   config_dir: '{{ playbook_dir }}/workspace/openshift_cluster_install/mycluster3'
   cluster_name: mycluster3
   base_domain: example.com
-  channel: stable-4.21
+  channel: stable-4.22
   version: latest
   control_plane_replicas: 3
   data_plane_replicas: 0
@@ -75,7 +75,7 @@ osclusterinstall_aws:
   config_dir: '{{ playbook_dir }}/workspace/openshift_cluster_install/mycluster10'
   cluster_name: mycluster10
   base_domain: sandbox1422.opentlc.com
-  channel: stable-4.21
+  channel: stable-4.22
   version: latest
   control_plane_replicas: 1
   data_plane_replicas: 3
@@ -90,7 +90,7 @@ osclusterinstall_gcp:
   config_dir: '{{ playbook_dir }}/workspace/openshift_cluster_install/mycluster11'
   cluster_name: mycluster11
   base_domain: sandbox1422.opentlc.com
-  channel: stable-4.21
+  channel: stable-4.22
   version: latest
   control_plane_replicas: 1
   data_plane_replicas: 3
@@ -106,7 +106,7 @@ osclusterinstall_azure:
   cluster_name: ocp4-azure
   base_domain: XXXX.azure.redhatworkshops.io
   version: latest
-  channel: stable-4.21
+  channel: stable-4.22
   network_type: OVNKubernetes
   cluster_network_cidr: 10.128.0.0/14
   service_network_cidr: 172.30.0.0/16
@@ -127,7 +127,7 @@ osclusterinstall_vsphere:
   config_dir: '{{ playbook_dir }}/workspace/openshift_cluster_install/mycluster18'
   cluster_name: 8bcng
   base_domain: dynamic.opentlc.com
-  channel: stable-4.21
+  channel: stable-4.22
   version: latest
   control_plane_replicas: 3
   data_plane_replicas: 0

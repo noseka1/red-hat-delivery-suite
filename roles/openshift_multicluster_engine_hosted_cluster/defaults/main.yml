@@ -1,6 +1,6 @@
 mcehostedcluster_kubevirt:
   cluster_name: mycluster20
-  ocp_release_image: 4.21.3-x86_64
+  ocp_release_image: 4.22.10-x86_64
   control_plane_replicas: 1
   data_plane_replicas: 1
   etcd_storageclass: ''
@@ -19,7 +19,7 @@ mcehostedcluster_kubevirt:
 
 mcehostedcluster_agent:
   cluster_name: mycluster21
-  ocp_release_image: 4.21.3-x86_64
+  ocp_release_image: 4.22.10-x86_64
   control_plane_replicas: 1
   data_plane_replicas: 1
   etcd_storageclass: ''

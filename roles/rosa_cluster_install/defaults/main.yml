@@ -1,7 +1,7 @@
 rosa_cluster_install:
   config_dir: '{{ playbook_dir }}/workspace/rosa_cluster_install/mycluster17'
   cluster_name: mycluster17
-  cluster_version: 4.21.5
+  cluster_version: 4.22.10
   aws_region: us-west-2
   # Only single AZ is supported at the moment
   aws_availability_zones: [ a ]
