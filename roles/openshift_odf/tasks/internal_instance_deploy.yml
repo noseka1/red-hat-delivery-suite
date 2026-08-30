@@ -21,6 +21,13 @@
     name: openshift_common
     tasks_from: get_default_volume_snapshot_class.yml
 
+- name: Check if storageclass ocs-storagecluster-ceph-rbd-virtualization exists
+  kubernetes.core.k8s_info:
+    api_version: storage.k8s.io/v1
+    kind: StorageClass
+    name: ocs-storagecluster-ceph-rbd-virtualization
+  register: odf_storageclass_rbd_virtualization_result
+
 - ansible.builtin.import_role:
     name: openshift_autogitops
     tasks_from: app_deploy.yml
