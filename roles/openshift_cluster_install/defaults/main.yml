@@ -97,7 +97,7 @@ osclusterinstall_gcp:
   network_type: OVNKubernetes
   cluster_network_cidr: 10.128.0.0/14
   service_network_cidr: 172.30.0.0/16
-  gcp_service_account_file: '{{ lookup("env", "HOME") }}/.gcp/osServiceAccount.json'
+  gcp_service_account_file: '{"auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","auth_uri": ...}'
   gcp_region: us-west1
   gcp_projectid: openenv-pvdbt
 
