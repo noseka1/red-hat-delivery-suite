@@ -1,4 +1,4 @@
-- name: Retrieve  Docker repository if it exists
+- name: Retrieve Docker repository if it exists
   ansible.builtin.uri:
     url: 'https://{{ nexus_repository_manager_route.resources.0.spec.host }}/service/rest/v1/repositories/docker/hosted/{{ nexus_repository_manager_docker_repo_name }}'
     user: admin
