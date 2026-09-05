@@ -1,0 +1,26 @@
+server:
+  host: 0.0.0.0
+  port: 8443
+  tls:
+    enabled: false
+system_id_convention: enhanced
+chassis:
+- name: kubevirt-example
+  namespace: kubevirt-example
+  service_account: kubevirt-redfish
+# If no vm_selector is specified then all VMs within the namespace are selected.
+#  vm_selector:
+#    labels:
+#      redfish-enabled: 'true'
+authentication:
+  users:
+  - username: admin
+    password: '{{ generic_user_password }}'
+    chassis:
+    - kubevirt-example
+datavolume:
+  # Allow insecure TLS for ISO downloads
+  allow_insecure_tls: false
+  # Empty storage class means to use the default storage class in the cluster
+  storage_class: ''
+  storage_size: 3Gi

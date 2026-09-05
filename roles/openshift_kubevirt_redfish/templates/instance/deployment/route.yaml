@@ -1,0 +1,18 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: kubevirt-redfish
+  namespace: kubevirt-redfish
+  labels:
+    app.kubernetes.io/name: kubevirt-redfish
+    app.kubernetes.io/component: server
+spec:
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: kubevirt-redfish
+    weight: 100
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect

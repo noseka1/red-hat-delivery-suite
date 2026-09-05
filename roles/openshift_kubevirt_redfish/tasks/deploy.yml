@@ -1,0 +1,18 @@
+- ansible.builtin.import_role:
+    name: openshift_hashicorp_vault
+    tasks_from: secret_insert.yml
+  vars:
+    hvault_mount_point: autogitops
+    hvault_secret_name: '{{ oscommon_cluster_domain }}/kubevirt-redfish/instance/config'
+    hvault_secret_data:
+      config.yaml: '{{ lookup("template", "instance/config/config.yaml") }}'
+
+- ansible.builtin.import_role:
+    name: openshift_autogitops
+    tasks_from: app_deploy.yml
+  vars:
+    autogitops_app_src_path: templates/instance/deployment
+    autogitops_app_dst_path: kubevirt-redfish/instance/deployment
+    autogitops_app_namespace: kubevirt-redfish
+
+- ansible.builtin.import_tasks: report_success.yml

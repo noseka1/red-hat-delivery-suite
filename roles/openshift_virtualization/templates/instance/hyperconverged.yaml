@@ -10,6 +10,11 @@ metadata:
 #          "op":"add",
 #          "path":"/spec/configuration/developerConfiguration/featureGates/-",
 #          "value":"EnableVirtioFsStorageVolumes"
+#        },
+#        {
+#          "op":"add",
+#          "path":"/spec/configuration/developerConfiguration/featureGates/-",
+#          "value":"RebootPolicy"
 #        }
 #      ]
   name: kubevirt-hyperconverged
@@ -33,6 +38,9 @@ spec:
     # DecentralizedLiveMigration enables the decentralized live migration (cross-cluster migration) feature.
     # This feature allows live migration of VirtualMachineInstances between different clusters or namespaces.
     decentralizedLiveMigration: true
+    # The declarativeHotplugVolumes feature gate enables KubeVirt Redfish to dynamically attach boot media to VMs
+    # through the Redfish API. This configuration is required when using KubeVirt Redfish for cluster installation.
+    declarativeHotplugVolumes: true
     # Enable persistent reservation of a LUN through the SCSI Persistent Reserve commands on Kubevirt.
     # In order to issue privileged SCSI ioctls, the VM requires activation of the persistent reservation flag.
     # Once this feature gate is enabled, then the additional container with the qemu-pr-helper is deployed

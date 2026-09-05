@@ -1,0 +1,31 @@
+- name: Obtain KubeVirt Redfish route
+  kubernetes.core.k8s_info:
+    api_version: route.openshift.io/v1
+    kind: Route
+    name: kubevirt-redfish
+    namespace: kubevirt-redfish
+  register: kubevirtredfish_route_result
+
+- name: Waiting since {{ now(fmt="%I:%M:%S %p") }} for KubeVirt Redfish API to come up
+  ansible.builtin.uri:
+    url: https://{{ kubevirtredfish_route_result.resources.0.spec.host }}/redfish/v1/Chassis
+    user: admin
+    password: '{{ generic_user_password }}'
+    method: GET
+    force_basic_auth: true
+    validate_certs: true
+  register: kubevirtredfish_request_result
+  until: kubevirtredfish_request_result.status in [ 200 ]
+  retries: 60
+  delay: 5
+
+- name: Report success
+  ansible.builtin.set_fact:
+    msg: |
+      KubeVirt Redfish installed successfully.
+
+      You can invoke the Redfish API using curl:
+      curl -u "admin:<password>" https://{{ kubevirtredfish_route_result.resources.0.spec.host }}/redfish/v1/
+
+- ansible.builtin.debug:
+    msg: "{{ msg.split('\n') }}"
