@@ -12,12 +12,16 @@ chassis:
 #  vm_selector:
 #    labels:
 #      redfish-enabled: 'true'
+- name: mycluster4-infraenv
+  namespace: mycluster4-infraenv
+  service_account: kubevirt-redfish
 authentication:
   users:
   - username: admin
     password: '{{ generic_user_password }}'
     chassis:
     - kubevirt-example
+    - mycluster4-infraenv
 datavolume:
   # Allow insecure TLS for ISO downloads
   allow_insecure_tls: false

@@ -1,0 +1,19 @@
+apiVersion: k8s.ovn.org/v1
+kind: ClusterUserDefinedNetwork
+metadata:
+  name: lab4
+spec:
+  namespaceSelector:
+    matchExpressions:
+    - key: kubernetes.io/metadata.name
+      operator: In
+      values:
+      - mycluster4-infraenv
+  network:
+    topology: Localnet
+    localnet:
+      ipam:
+        mode: Disabled
+      mtu: 1500
+      physicalNetworkName: localnet-lab4-bridge
+      role: Secondary

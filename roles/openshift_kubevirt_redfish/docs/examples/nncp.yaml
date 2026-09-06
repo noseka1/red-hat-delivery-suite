@@ -1,0 +1,34 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: lab4-bridge
+spec:
+  desiredState:
+    interfaces:
+    - name: enp2s0
+      type: ethernet
+      ipv4:
+        enabled: false
+      ipv6:
+        enabled: false
+      # Enable LLDP to receive information on which switch and switch port
+      # is this network interace connected to.
+      lldp:
+        enabled: true
+      state: up
+    - name: lab4-bridge
+      type: ovs-bridge
+      bridge:
+        port:
+        - name: enp2s0
+        # Allow OVN-Kubernetes to dynamically add its own patch ports to the bridge for internal connectivity,
+        # without NMState treating them as unexpected configuration and removing them.
+        allow-extra-patch-ports: true
+        options:
+          stp: false
+      state: up
+    ovn:
+      bridge-mappings:
+      - bridge: lab4-bridge
+        localnet: localnet-lab4-bridge
+        state: present

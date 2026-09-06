@@ -66,6 +66,20 @@
   loop_control:
     label: '{{ item.key }}'
 
+- name: Retrieve details on system resources
+  ansible.builtin.uri:
+    url: https://{{ item.value.bmc.baseuri }}/redfish/v1/Systems/{{ item.value.bmc.resource_id }}
+    method: GET
+    url_username: '{{ osclusterinstall_info.cluster_nodes_shared.bmc.username }}'
+    url_password: '{{ osclusterinstall_info.cluster_nodes_shared.bmc.password }}'
+    force_basic_auth: true
+    validate_certs: '{{ not osclusterinstall_info.cluster_nodes_shared.bmc.disable_certificate_verification }}'
+    status_code: [ 200 ]
+  register: osclusterinstall_redfish_system_result
+  loop: '{{ osclusterinstall_info.cluster_nodes_individual | dict2items }}'
+  loop_control:
+    label: '{{ item.key }}'
+
 #  If using Sushy BMC emulator, use the following task to set the boot order:
 #  1. Disk
 #  2. CD-ROM
@@ -76,8 +90,7 @@
 #  ensures that the first boot happens from the CD-ROM (as the disk has no
 #  operating system on it) and all the following boots use the disk.
 #
-#  If not using Sushy, comment out the following code to keep the one-time boot
-#  from CD-ROM:
+#  If not using Sushy, skip the task to keep the one-time boot from CD-ROM:
 - name: Set one-time boot from disk
   community.general.redfish_command:
     category: Systems
@@ -88,6 +101,9 @@
     validate_certs: '{{ not osclusterinstall_info.cluster_nodes_shared.bmc.disable_certificate_verification }}'
     resource_id: '{{ item.value.bmc.resource_id }}'
     bootdevice: Hdd
+  when: >-
+    'Sushy' in
+      ((osclusterinstall_redfish_system_result.results | selectattr('item.key', 'equalto', item.key) | first).json.Manufacturer | default(''))
   loop: '{{ osclusterinstall_info.cluster_nodes_individual | dict2items }}'
   loop_control:
     label: '{{ item.key }}'

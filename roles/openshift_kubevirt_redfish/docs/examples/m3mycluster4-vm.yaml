@@ -1,0 +1,58 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: m3mycluster4
+  namespace: mycluster4-infraenv
+spec:
+  runStrategy: Halted
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mycluster4
+        app.kubernetes.io/instance: mycluster4-master
+    spec:
+      # Virtualized control plane nodes should be placed on different cluster nodes.
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - mycluster4
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - mycluster4-master
+            topologyKey: kubernetes.io/hostname
+      domain:
+        cpu:
+          cores: 8
+          sockets: 1
+          threads: 2
+        devices:
+          disks:
+          - disk:
+              bus: virtio
+            name: rootdisk
+          interfaces:
+          - bridge: {}
+            macAddress: '52:54:00:04:23:00'
+            model: virtio
+            name: net1
+          logSerialConsole: true
+          networkInterfaceMultiqueue: false
+          rng: {}
+        memory:
+          guest: 24Gi
+        rebootPolicy: Terminate
+      hostname: m3mycluster4
+      networks:
+      - name: net1
+        multus:
+          networkName: lab4
+      volumes:
+      - persistentVolumeClaim:
+          claimName: m3mycluster4-rootdisk
+        name: rootdisk
