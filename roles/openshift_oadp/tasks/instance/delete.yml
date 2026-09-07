@@ -1,8 +1,18 @@
 # Backup objects get automatically recreated in Kubernetes based on
 # their state in S3 bucket. Delete S3 bucket prior to deleting
 # the backup objects in Kubernetes so they are not recreated.
-- ansible.builtin.import_tasks: minio_delete.yml
+- ansible.builtin.import_tasks: minio/delete.yml
   when: oadp_instance_minio_enabled
+
+# Delete objects that have finalizer
+- ansible.builtin.import_role:
+    name: openshift_common
+    tasks_from: delete_kubernetes_objects.yml
+  vars:
+    delete_kubernetes_objects:
+      - api_version: velero.io/v1
+        kind: Restore
+        namespace: '{{ oadp_instance_namespace }}'
 
 - ansible.builtin.import_role:
     name: openshift_autogitops

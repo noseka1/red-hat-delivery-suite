@@ -6,7 +6,7 @@
 
 - ansible.builtin.import_role:
     name: openshift_oadp
-    tasks_from: instance_delete.yml
+    tasks_from: instance/delete.yml
   vars:
     oadp_operator_namespace: open-cluster-management-backup
     oadp_operator_manage_namespace: false

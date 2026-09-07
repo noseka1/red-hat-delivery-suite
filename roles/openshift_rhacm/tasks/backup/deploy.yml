@@ -1,6 +1,6 @@
 - ansible.builtin.import_role:
     name: openshift_oadp
-    tasks_from: instance_deploy.yml
+    tasks_from: instance/deploy.yml
   vars:
     # Note that RHACM backup requires that OADP (Velero) is deployed
     # in the open-cluster-management-backup namespace

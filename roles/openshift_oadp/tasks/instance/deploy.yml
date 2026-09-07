@@ -1,4 +1,4 @@
-- ansible.builtin.import_tasks: minio_deploy.yml
+- ansible.builtin.import_tasks: minio/deploy.yml
   when: oadp_instance_minio_enabled
 
 - ansible.builtin.import_role:
