@@ -13,7 +13,7 @@
   ansible.builtin.uri:
     url: '{{ item }}'
     validate_certs: true
-    status_code: [ 200, 403 ]
+    status_code: [ 200, 403, 503 ]
   register: aap_instance_uri_result
   loop:
     - https://{{ aap_gateway_route_result.resources.0.spec.host }}/api/gateway/v1/ping/
