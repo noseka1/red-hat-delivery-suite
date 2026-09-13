@@ -21,7 +21,7 @@
     - https://{{ aap_gateway_route_result.resources.0.spec.host }}/api/galaxy/v3/
     - https://{{ aap_gateway_route_result.resources.0.spec.host }}/api/eda/v1/
   until: aap_instance_uri_result.status in [ 200, 403 ]
-  retries: 60
+  retries: 120
   delay: 5
 
 - name: Set msg
