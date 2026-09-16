@@ -1,13 +1,5 @@
-- ansible.builtin.import_role:
-    name: openshift_autogitops
-    tasks_from: app_delete.yml
-  vars:
-    autogitops_app_dst_path: osai/instance
+- ansible.builtin.import_tasks: instance/delete.yml
   tags: osai_instance
 
-- ansible.builtin.import_role:
-    name: openshift_autogitops
-    tasks_from: app_delete.yml
-  vars:
-    autogitops_app_dst_path: osai/operator
+- ansible.builtin.import_tasks: operator/delete.yml
   tags: osai_operator
