@@ -2,8 +2,13 @@
     name: openshift_common
     tasks_from: get_infrastructure.yml
 
-- ansible.builtin.import_tasks: prereqs_deploy.yml
-  tags: autogitops_prereqs
+- ansible.builtin.import_role:
+    name: openshift_gitea
+    tasks_from: deploy.yml
+
+- ansible.builtin.import_role:
+    name: openshift_gitops
+    tasks_from: deploy.yml
 
 - ansible.builtin.import_tasks: remote_repo_create.yml
 
