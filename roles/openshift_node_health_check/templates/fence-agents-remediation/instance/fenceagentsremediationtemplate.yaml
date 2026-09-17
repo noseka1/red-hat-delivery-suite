@@ -1,3 +1,5 @@
+{% if fenceagents_remediation_node_parameters.items() | length > 0 and
+     fenceagents_remediation_shared_parameters.items() | length > 0 %}
 apiVersion: fence-agents-remediation.medik8s.io/v1alpha1
 kind: FenceAgentsRemediationTemplate
 metadata:
@@ -20,3 +22,4 @@ spec:
 {% for key, value in fenceagents_remediation_node_parameters.items() %}
         {{ key }}: remediation-node-{{ key }}
 {% endfor %}
+{% endif %}
