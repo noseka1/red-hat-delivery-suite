@@ -9,6 +9,7 @@ controlPlane:
   platform:
     aws:
       # m6i.2xlarge = 8 vCPUs, 32 GiB RAM
+      # m6i.16xlarge = 64 vCPUs, 256 GiB RAM
       type: m6i.2xlarge
 compute:
 - hyperthreading: Enabled
