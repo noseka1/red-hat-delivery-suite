@@ -16,6 +16,8 @@ osclusterpostinst_kernel_arguments: []
 # See also https://kubevirt.io/user-guide/compute/host-devices/
 #  - intel_iommu=on
 #  - amd_iommu=on
+# The Descheduler KubeVirtRelieveAndMigrate profile depends on active Pressure Stall Information (PSI) metrics:
+#  - psi=1
 
 # Override chrony NTP server list
 osclusterpostinst_custom_ntp_servers: []

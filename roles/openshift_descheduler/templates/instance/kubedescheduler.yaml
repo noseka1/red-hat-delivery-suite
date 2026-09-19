@@ -4,14 +4,25 @@ metadata:
   name: cluster
   namespace: openshift-kube-descheduler-operator
 spec:
-  deschedulingIntervalSeconds: 3600
-  logLevel: Normal
+  deschedulingIntervalSeconds: 60
+  # The descheduler can limit the number of concurrent evictions per node and across the cluster by using the
+  # evictionLimits field. The descheduler eviction limits should be no greater than the live-migration limits
+  # to prevent queuing migrations that KubeVirt cannot execute. The live-migration limits are configured in the
+  # HyperConverged resource and the defaults are:
+  #   spec:
+  #     liveMigrationConfig:
+  #       parallelMigrationsPerCluster: 5
+  #       parallelOutboundMigrationsPerNode: 2
+  #
+  evictionLimits:
+    node: 2
+    total: 5
   managementState: Managed
-  operatorLogLevel: Normal
-  mode: Predictive
+  mode: Automatic
   profiles:
-  - AffinityAndTaints
-  - TopologyAndDuplicates
-  - LifecycleAndUtilization
-  - EvictPodsWithLocalStorage
-  - EvictPodsWithPVC
+  - KubeVirtRelieveAndMigrate
+  profileCustomizations:
+    devDeviationThresholds: AsymmetricLow
+    devActualUtilizationProfile: PrometheusCPUMemoryCombinedProfile
+  operatorLogLevel: Normal
+  logLevel: Normal
