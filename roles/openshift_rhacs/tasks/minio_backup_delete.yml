@@ -2,5 +2,5 @@
     name: openshift_minio
     tasks_from: delete.yml
   vars:
-    minio_namespace: 'stackrox-minio'
+    minio_namespace: stackrox-minio
     minio_app_prefix: rhacs-

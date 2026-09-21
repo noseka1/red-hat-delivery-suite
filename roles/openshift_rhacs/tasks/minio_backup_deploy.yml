@@ -2,7 +2,7 @@
     name: openshift_minio
     tasks_from: deploy.yml
   vars:
-    minio_namespace: 'stackrox-minio'
+    minio_namespace: stackrox-minio
     minio_app_prefix: rhacs-
 
 - name: Obtain Minio API route
@@ -10,7 +10,7 @@
     name: openshift_minio
     tasks_from: get_minio_api_route.yml
   vars:
-    minio_namespace: 'stackrox-minio'
+    minio_namespace: stackrox-minio
 
 - name: Retrieve existing backup configuration
   ansible.builtin.uri:
